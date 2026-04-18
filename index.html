@@ -40,7 +40,61 @@
       --font-body: 'DM Sans', sans-serif;
     }
 
-    body { background: var(--bg-base); color: var(--text-primary); font-family: var(--font-body); min-height: 100dvh; overflow-x: hidden; line-height: 1.5; }
+    body { background: var(--bg-base); color: var(--text-primary); font-family: var(--font-body); min-height: 100dvh; overflow-x: hidden; line-height: 1.5; transition: background 0.3s, color 0.3s; }
+
+    /* Light mode */
+    body.light { --bg-base: #f5f2ed; --bg-surface: #eae6df; --bg-card: #e0dbd3; --bg-hover: #d6d0c8; --text-primary: #1a1a1e; --text-secondary: #5c5856; --text-muted: #9a9590; --border-subtle: rgba(0,0,0,0.06); --border-mid: rgba(0,0,0,0.10);
+      --col-sleep-bg: rgba(167,139,186,0.18); --col-meditation-bg: rgba(139,159,212,0.18); --col-relaxation-bg: rgba(126,196,184,0.18); --col-focus-bg: rgba(228,192,122,0.18); --col-neural-bg: rgba(122,173,228,0.18); --col-pain-bg: rgba(141,212,160,0.18); --col-chakra-bg: rgba(212,160,139,0.18); --col-solfeggio-bg: rgba(212,139,160,0.18); --col-earth-bg: rgba(160,196,160,0.18); }
+    body.light #header { background: rgba(245,242,237,0.92); }
+    body.light #control-bar { background: rgba(240,237,232,0.96); }
+    body.light #ctrl-play { background: var(--text-primary); color: var(--bg-base); }
+    body.light .vlchip { background: rgba(0,0,0,0.06); }
+    body.light .fcard .fcard-name { color: rgba(0,0,0,0.75); }
+    body.light .fcard .fcard-desc { color: rgba(0,0,0,0.45); }
+    body.light .fcard .fcard-source { color: rgba(0,0,0,0.3); }
+    body.light .fcard .fcard-badge { background: rgba(0,0,0,0.08); color: rgba(0,0,0,0.5); }
+    body.light .fcard:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+    body.light .fcard.active { border-color: transparent; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
+    body.light #top-section { background: #1a1a1e; border-color: rgba(255,255,255,0.06); }
+    body.light #top-section::before { background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.02), transparent 70%); }
+    body.light #top-header { color: var(--text-muted); }
+    body.light #top-title { color: rgba(255,255,255,0.4); }
+    body.light #top-status { color: rgba(255,255,255,0.5); }
+    body.light #viz-empty { color: rgba(255,255,255,0.3); }
+    body.light .vlchip { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); }
+    body.light .vlchip .crm { color: rgba(255,255,255,0.4); }
+    body.light .jslot { border-color: rgba(255,255,255,0.1); }
+    body.light .jslot.empty .js-num { color: rgba(255,255,255,0.3); }
+    body.light .jslot.empty .js-lbl { color: rgba(255,255,255,0.3); }
+    body.light .jslot.highlight { border-color: var(--col-meditation); background: rgba(139,159,212,0.1); }
+    body.light .jctl-pri { background: #f0ece4; color: #1a1a1e; }
+    body.light .jctl-sec { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+    body.light .jprog-cur { color: rgba(255,255,255,0.8); }
+    body.light .js-dur-btn { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+    body.light .share-close { background: var(--bg-card); color: var(--text-secondary); border: 1px solid var(--border-mid); }
+    body.light #share-modal { background: var(--bg-surface); }
+    body.light .jctl-sec { background: rgba(0,0,0,0.05); }
+    body.light .js-dur-btn { background: rgba(0,0,0,0.08); color: rgba(0,0,0,0.5); }
+
+    /* Photic entrainment overlay */
+    #photic-overlay { position: fixed; inset: 0; z-index: 400; background: #000; display: none; align-items: center; justify-content: center; flex-direction: column; cursor: pointer; }
+    #photic-overlay.active { display: flex; }
+    #photic-flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+    #photic-info { position: relative; z-index: 1; text-align: center; color: rgba(255,255,255,0.5); font-size: 13px; pointer-events: none; }
+    #photic-info .photic-hz { font-size: 48px; font-weight: 800; color: rgba(255,255,255,0.7); margin-bottom: 8px; }
+    #photic-exit { position: absolute; top: 20px; right: 20px; z-index: 2; padding: 8px 20px; border-radius: var(--radius-pill); background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); font-size: 12px; font-weight: 600; }
+    #photic-exit:hover { background: rgba(255,255,255,0.2); color: #fff; }
+
+    /* Photic warning modal */
+    #photic-warn { position: fixed; inset: 0; z-index: 450; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; padding: 20px; }
+    #photic-warn.visible { display: flex; }
+    #photic-warn-box { background: var(--bg-surface); border-radius: var(--radius-xl); border: 1px solid var(--border-mid); padding: 28px; max-width: 440px; width: 100%; }
+    #photic-warn-box h3 { font-size: 20px; font-weight: 800; margin-bottom: 12px; color: #ef4444; }
+    #photic-warn-box p { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; line-height: 1.6; }
+    #photic-warn-actions { display: flex; gap: 8px; margin-top: 16px; }
+    .pw-btn { flex: 1; padding: 10px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; }
+    .pw-accept { background: var(--text-primary); color: var(--bg-base); }
+    .pw-cancel { background: var(--bg-card); color: var(--text-secondary); border: 1px solid var(--border-mid); }
 
     #header { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; background: rgba(13,13,15,0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-subtle); }
     #brand { font-family: var(--font-display); font-size: 28px; letter-spacing: 0.08em; }
@@ -48,9 +102,15 @@
     .header-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--bg-card); border: 1px solid var(--border-mid); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
     .header-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
     #nav-tabs { display: flex; gap: 4px; background: var(--bg-card); border-radius: var(--radius-pill); padding: 3px; border: 1px solid var(--border-subtle); }
-    .nav-tab { padding: 7px 16px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); transition: all 0.25s; }
+    .nav-tab { padding: 7px 16px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); transition: all 0.25s; display: flex; align-items: center; gap: 5px; }
     .nav-tab.active { background: var(--text-primary); color: var(--bg-base); }
     .nav-tab:hover:not(.active) { color: var(--text-secondary); }
+    .nav-tab svg { width: 14px; height: 14px; }
+    #theme-switch { display: flex; gap: 2px; background: var(--bg-card); border-radius: var(--radius-pill); padding: 3px; border: 1px solid var(--border-subtle); }
+    .theme-opt { padding: 6px 10px; border-radius: var(--radius-pill); color: var(--text-muted); transition: all 0.25s; display: flex; align-items: center; justify-content: center; }
+    .theme-opt.active { background: var(--text-primary); color: var(--bg-base); }
+    .theme-opt:hover:not(.active) { color: var(--text-secondary); }
+    .theme-opt svg { width: 14px; height: 14px; }
 
     #main { padding: 20px; padding-bottom: 200px; max-width: 900px; margin: 0 auto; }
 
@@ -121,13 +181,16 @@
     .fcard::before { content: ''; position: absolute; inset: 0; border-radius: var(--radius-lg); opacity: 0; transition: opacity 0.3s; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.06), transparent 70%); }
     .fcard:hover::before { opacity: 1; }
     .fcard:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
-    .fcard.active { border-color: rgba(255,255,255,0.2); box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 8px 32px rgba(0,0,0,0.4); }
+    .fcard.active { border-color: transparent; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+    .fcard.active .fcard-desc { color: rgba(255,255,255,0.7); }
+    .fcard.active .fcard-source { color: rgba(255,255,255,0.5); }
+    .fcard.active .fcard-badge { background: rgba(255,255,255,0.2); color: #fff; }
     .fcard .fcard-hz { font-family: var(--font-display); font-size: 36px; line-height: 1; letter-spacing: -0.02em; }
     .fcard .fcard-unit { font-family: var(--font-body); font-size: 14px; font-weight: 400; opacity: 0.6; margin-left: 2px; }
     .fcard .fcard-name { font-size: 13px; font-weight: 600; margin-top: 8px; color: rgba(255,255,255,0.9); }
     .fcard .fcard-desc { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 4px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .fcard .fcard-source { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 8px; font-style: italic; }
-    .fcard .fcard-dot { position: absolute; top: 14px; right: 14px; width: 8px; height: 8px; border-radius: 50%; background: #fff; opacity: 0; transition: opacity 0.2s; }
+    .fcard .fcard-dot { position: absolute; top: 14px; right: 14px; width: 8px; height: 8px; border-radius: 50%; opacity: 0; transition: opacity 0.2s; }
     .fcard.active .fcard-dot { opacity: 1; animation: pulse-glow 1.5s ease-in-out infinite; }
     .fcard .fcard-badge { display: inline-block; margin-top: 6px; font-size: 9px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 8px; border-radius: var(--radius-pill); background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); }
     .fcard { animation: card-in 0.3s ease both; }
@@ -145,7 +208,10 @@
     #ctrl-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
     #wave-pills { display: flex; background: var(--bg-card); border-radius: var(--radius-pill); border: 1px solid var(--border-subtle); overflow: hidden; }
     .wpill { padding: 6px 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); transition: all 0.2s; }
-    .wpill.active { background: var(--text-primary); color: var(--bg-base); }
+    .wpill.active { color: #fff; }
+    .wpill[data-wave="sine"].active { background: var(--col-relaxation); }
+    .wpill[data-wave="binaural"].active { background: var(--col-meditation); }
+    .wpill[data-wave="isochronal"].active { background: var(--col-focus); }
     .wpill:hover:not(.active) { color: var(--text-secondary); }
     #mode-pill { display: flex; align-items: center; gap: 8px; }
     .mode-lbl { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); transition: color 0.2s; }
@@ -200,6 +266,17 @@
         <button class="nav-tab active" data-view="play">Play</button>
         <button class="nav-tab" data-view="journey">Journey</button>
       </nav>
+      <div id="theme-switch">
+        <button class="theme-opt active" data-theme="dark" title="Dark mode">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
+        </button>
+        <button class="theme-opt" data-theme="light" title="Light mode">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+      </div>
+      <button class="header-btn" id="photic-btn" title="Photic entrainment">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
       <button class="header-btn" id="share-btn" title="Share">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
       </button>
@@ -208,7 +285,7 @@
   <div id="main">
     <section id="top-section">
       <div id="top-header">
-        <span id="top-title">Waveform</span>
+        <span id="top-title"></span>
         <span id="top-status"></span>
       </div>
       <div id="top-content">
@@ -231,6 +308,8 @@
     <div id="freq-grid" role="list"></div>
   </div>
   <div id="share-overlay"><div id="share-modal"><h3>Share Session</h3><p>Copy this link to share your current configuration.</p><input type="text" id="share-url" readonly><div id="share-actions"><button class="share-btn share-copy" id="share-copy-btn">Copy Link</button><button class="share-btn share-close" id="share-close-btn">Close</button></div></div></div>
+  <div id="photic-overlay"><div id="photic-flash"></div><div id="photic-info"><div class="photic-hz" id="photic-hz-display"></div><div>Close your eyes. Tap anywhere to exit.</div></div><button id="photic-exit">Exit</button></div>
+  <div id="photic-warn"><div id="photic-warn-box"><h3>Photosensitivity Warning</h3><p>Photic entrainment uses screen flicker synced to the selected frequency. This feature produces rapid flashing light.</p><p><strong>Do not use if you have epilepsy, a history of seizures, or photosensitivity.</strong> Consult a medical professional if unsure.</p><p>Close your eyes before the flicker begins. The therapeutic effect works through closed eyelids via phosphene stimulation.</p><div id="photic-warn-actions"><button class="pw-btn pw-accept" id="pw-accept">I understand, proceed</button><button class="pw-btn pw-cancel" id="pw-cancel">Cancel</button></div></div></div>
   <div id="control-bar"><div id="control-inner">
     <button id="ctrl-play" aria-label="Play" disabled><svg id="ctrl-play-icon" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
     <div id="ctrl-info"><div id="ctrl-name">Select a frequency</div><div id="ctrl-sub"></div></div>
@@ -370,7 +449,7 @@ document.getElementById('freq-grid').innerHTML=freqs.map(f=>{const isBin=f.binau
 return`<div class="fcard" data-fid="${f.id}" tabindex="0" role="listitem" style="background:${cat.bg};color:${cat.hex}"><div><div class="fcard-hz">${f.hz}<span class="fcard-unit">Hz</span></div><div class="fcard-name" style="color:${cat.hex}">${f.name}</div><div class="fcard-desc">${f.desc}</div>${isBin?'<span class="fcard-badge">Binaural</span>':''}</div><div class="fcard-source">${f.source}</div><div class="fcard-dot" style="background:${cat.hex}"></div></div>`;}).join('');
 UI.syncCards();},
 
-syncCards(){const isJ=S.view==='journey';document.querySelectorAll('.fcard').forEach(card=>{const fid=card.dataset.fid;const on=isJ?S.jSlots.some(s=>s&&s.id===fid):S.activeSounds.has(fid);card.classList.toggle('active',on);});},
+syncCards(){const isJ=S.view==='journey';const curCat=CATEGORIES.find(c=>c.id===S.catId);document.querySelectorAll('.fcard').forEach(card=>{const fid=card.dataset.fid;const on=isJ?S.jSlots.some(s=>s&&s.id===fid):S.activeSounds.has(fid);card.classList.toggle('active',on);if(on){const ct=catFor(fid);const hex=ct?ct.hex:'#888';card.style.background=hex;card.style.color='#fff';card.style.borderColor='transparent';card.querySelector('.fcard-name').style.color='#fff';card.querySelector('.fcard-dot').style.background='#fff';}else{card.style.background=curCat?curCat.bg:'var(--bg-card)';card.style.color=curCat?curCat.hex:'var(--text-primary)';card.style.borderColor='transparent';const nm=card.querySelector('.fcard-name');if(nm)nm.style.color=curCat?curCat.hex:'';const dt=card.querySelector('.fcard-dot');if(dt)dt.style.background=curCat?curCat.hex:'';}});},
 
 renderVL(){const el=document.getElementById('viz-layers');if(S.activeSounds.size===0){el.innerHTML='';return;}el.innerHTML=[...S.activeSounds.values()].map(s=>`<div class="vlchip"><span class="cdot" style="background:${s.color}"></span><span>${s.freq.hz} Hz</span><span class="crm" data-rid="${s.freq.id}">&times;</span></div>`).join('');},
 
@@ -382,7 +461,7 @@ document.getElementById('j-play').disabled=!S.jSlots.some(Boolean);},
 
 switchView(v){S.view=v;document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active',t.dataset.view===v));
 const isJ=v==='journey';document.getElementById('viz-wrap-outer').classList.toggle('hidden',isJ);document.getElementById('jslots-wrap').classList.toggle('active',isJ);
-document.getElementById('top-title').textContent=isJ?'Journey':'Waveform';document.getElementById('top-status').textContent=isJ?'Tap a frequency below to fill slots':'';
+document.getElementById('top-title').textContent=isJ?'Journey':'';document.getElementById('top-status').textContent=isJ?'Tap a frequency below to fill slots':'';
 if(isJ)UI.renderJS();UI.syncCards();UI.syncAll();},
 
 syncAll(){const btn=document.getElementById('ctrl-play'),has=S.activeSounds.size>0;btn.disabled=!has;
@@ -390,7 +469,7 @@ document.getElementById('ctrl-play-icon').innerHTML=has?'<rect x="6" y="4" width
 btn.setAttribute('aria-label',has?'Stop':'Play');
 const nm=document.getElementById('ctrl-name'),sb=document.getElementById('ctrl-sub');
 if(!has){nm.textContent='Select a frequency';sb.textContent='';}else{const ss=[...S.activeSounds.values()];if(ss.length===1){nm.textContent=ss[0].freq.hz+' Hz \u2014 '+ss[0].freq.name;const ct=catFor(ss[0].freq.id);sb.textContent=ct?ct.name:'';}else{nm.textContent=ss.length+' frequencies active';sb.textContent=ss.map(s=>s.freq.hz+' Hz').join(' \u00b7 ');}}
-if(S.view==='play'){const vs=document.getElementById('top-status');if(has){const w=S.wave==='binaural'?'Binaural':S.wave==='isochronal'?'Isochronal':'Sine';vs.textContent=w+' \u00b7 '+S.activeSounds.size+' layer'+(S.activeSounds.size>1?'s':'');}else vs.textContent='';}
+if(S.view==='play'){const vs=document.getElementById('top-status');if(has){const w=S.wave==='binaural'?'Binaural':S.wave==='isochronal'?'Isochronal':'Sine';vs.textContent=w+' \u00b7 '+S.activeSounds.size+' layer'+(S.activeSounds.size>1?'s':'');}else vs.textContent='';document.getElementById('top-title').textContent='';}
 UI.renderVL();if(has){Viz.start();Wake.acquire();}else{Viz.stop();Wake.release();}},
 
 timerD(){const el=document.getElementById('timer-disp');if(!S.timerDur||S.timerRem<=0){el.textContent='';return;}const m=Math.floor(S.timerRem/60),s=S.timerRem%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');},
@@ -447,6 +526,60 @@ document.getElementById('share-copy-btn').addEventListener('click',Share.copy);
 document.getElementById('share-close-btn').addEventListener('click',Share.hide);
 document.getElementById('share-overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)Share.hide();});
 document.addEventListener('touchstart',()=>Aud.resume(),{passive:true});
+
+// Theme switch
+document.getElementById('theme-switch').addEventListener('click',e=>{
+  const btn=e.target.closest('.theme-opt');if(!btn)return;
+  const isLight=btn.dataset.theme==='light';
+  document.body.classList.toggle('light',isLight);
+  document.querySelectorAll('.theme-opt').forEach(b=>b.classList.toggle('active',b===btn));
+});
+
+// Photic entrainment
+let photicRaf=null,photicAccepted=false;
+function startPhotic(){
+  const sounds=[...S.activeSounds.values()];
+  if(sounds.length===0)return;
+  const hz=sounds[0].freq.hz;
+  const rate=hz<20?hz:Math.min(hz,40);
+  document.getElementById('photic-hz-display').textContent=hz+' Hz';
+  document.getElementById('photic-overlay').classList.add('active');
+  const flash=document.getElementById('photic-flash');
+  const interval=1000/rate;
+  let last=0,on=false;
+  function tick(ts){
+    photicRaf=requestAnimationFrame(tick);
+    if(ts-last>=interval/2){
+      on=!on;
+      flash.style.opacity=on?'1':'0';
+      last=ts;
+    }
+  }
+  photicRaf=requestAnimationFrame(tick);
+}
+function stopPhotic(){
+  if(photicRaf)cancelAnimationFrame(photicRaf);
+  photicRaf=null;
+  document.getElementById('photic-overlay').classList.remove('active');
+  document.getElementById('photic-flash').style.opacity='0';
+}
+document.getElementById('photic-btn').addEventListener('click',()=>{
+  if(S.activeSounds.size===0)return;
+  if(photicAccepted){startPhotic();return;}
+  document.getElementById('photic-warn').classList.add('visible');
+});
+document.getElementById('pw-accept').addEventListener('click',()=>{
+  photicAccepted=true;
+  document.getElementById('photic-warn').classList.remove('visible');
+  startPhotic();
+});
+document.getElementById('pw-cancel').addEventListener('click',()=>{
+  document.getElementById('photic-warn').classList.remove('visible');
+});
+document.getElementById('photic-exit').addEventListener('click',stopPhotic);
+document.getElementById('photic-overlay').addEventListener('click',e=>{
+  if(e.target===document.getElementById('photic-overlay')||e.target===document.getElementById('photic-flash'))stopPhotic();
+});
 }
 
 function init(){UI.renderCats();UI.renderCards();UI.syncAll();UI.renderJS();Share.decode();bind();Viz.start();}
