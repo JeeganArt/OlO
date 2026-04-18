@@ -252,7 +252,7 @@ const CATEGORIES=[
 {id:'neural',name:'Restore',color:'var(--col-neural)',bg:'var(--col-neural-bg)',hex:'#7aade4',desc:'Gamma frequencies with documented brain health effects.'},
 {id:'pain',name:'Heal',color:'var(--col-pain)',bg:'var(--col-pain-bg)',hex:'#8dd4a0',desc:'Clinically studied frequencies for pain relief and restoration.'},
 {id:'chakra',name:'Align',color:'var(--col-chakra)',bg:'var(--col-chakra-bg)',hex:'#d4a08b',desc:'Frequencies from OM spectral analysis, mapped to chakra centers.'},
-{id:'solfeggio',name:'Attune',color:'var(--col-solfeggio)',bg:'var(--col-solfeggio-bg)',hex:'#d48ba0',desc:'Ancient solfège scale frequencies for healing and transformation.'},
+{id:'solfeggio',name:'Balance',color:'var(--col-solfeggio)',bg:'var(--col-solfeggio-bg)',hex:'#d48ba0',desc:'Ancient solfège scale frequencies for healing and transformation.'},
 {id:'earth',name:'Ground',color:'var(--col-earth)',bg:'var(--col-earth-bg)',hex:'#a0c4a0',desc:"Schumann resonances — Earth's electromagnetic cavity frequencies."},
 ];
 const FREQ_DATA={
@@ -327,12 +327,11 @@ function catFor(fid){return CATEGORIES.find(c=>FREQ_DATA[c.id]?.some(f=>f.id===f
 const Aud={
 ensure(){if(S.ctx)return;const C=window.AudioContext||window.webkitAudioContext;S.ctx=new C();S.masterGain=S.ctx.createGain();S.masterGain.gain.setValueAtTime(S.masterVol,S.ctx.currentTime);S.analyser=S.ctx.createAnalyser();S.analyser.fftSize=2048;S.analyser.smoothingTimeConstant=0.8;S.masterGain.connect(S.analyser);S.analyser.connect(S.ctx.destination);},
 resume(){if(S.ctx&&S.ctx.state==='suspended')S.ctx.resume();},
-_bin(f){return S.wave==='binaural'||f.binaural||f.hz<20;},
+_bin(f){if(f.hz<20)return true;return S.wave==='binaural';},
 _mkSine(f){const c=S.ctx,o=c.createOscillator();o.type='sine';o.frequency.setValueAtTime(f.hz,c.currentTime);const g=c.createGain();g.gain.setValueAtTime(0,c.currentTime);g.gain.linearRampToValueAtTime(1,c.currentTime+.2);o.connect(g);g.connect(S.masterGain);o.start();return{oscillators:[o],gainNode:g,isBinaural:false};},
 _mkBin(f){const c=S.ctx,cr=f.carrierHz||200,bt=f.hz,g=c.createGain();g.gain.setValueAtTime(0,c.currentTime);g.gain.linearRampToValueAtTime(1,c.currentTime+.2);const m=c.createChannelMerger(2);const oL=c.createOscillator();oL.type='sine';oL.frequency.setValueAtTime(cr,c.currentTime);const gL=c.createGain();gL.gain.setValueAtTime(1,c.currentTime);oL.connect(gL);gL.connect(m,0,0);const oR=c.createOscillator();oR.type='sine';oR.frequency.setValueAtTime(cr+bt,c.currentTime);const gR=c.createGain();gR.gain.setValueAtTime(1,c.currentTime);oR.connect(gR);gR.connect(m,0,1);m.connect(g);g.connect(S.masterGain);oL.start();oR.start();return{oscillators:[oL,oR],gainNode:g,isBinaural:true};},
-_mkIso(f){const c=S.ctx;const carrier=f.hz<20?(f.carrierHz||200):f.hz;const rate=f.hz<20?f.hz:Math.min(f.hz,40);const osc=c.createOscillator();osc.type='sine';osc.frequency.setValueAtTime(carrier,c.currentTime);const g=c.createGain();g.gain.setValueAtTime(0,c.currentTime);
-// Schedule smooth pulses: ramp up/down each cycle to avoid clicks
-const pulseDur=1/rate;const ramp=Math.min(pulseDur*0.15,0.01);const startT=c.currentTime;const totalDur=120;// schedule 2 min of pulses, re-triggered if needed
+_mkIso(f){const c=S.ctx;const carrier=f.hz<20?(f.carrierHz||200):f.hz;const rate=f.hz<20?f.hz:f.hz;const osc=c.createOscillator();osc.type='sine';osc.frequency.setValueAtTime(carrier,c.currentTime);const g=c.createGain();g.gain.setValueAtTime(0,c.currentTime);
+const pulseDur=1/rate;const ramp=Math.min(pulseDur*0.15,0.005);const startT=c.currentTime;const totalDur=120;
 for(let t=0;t<totalDur;t+=pulseDur){const on=startT+t;const off=on+pulseDur*0.5;g.gain.setValueAtTime(0,on);g.gain.linearRampToValueAtTime(1,on+ramp);g.gain.setValueAtTime(1,off-ramp);g.gain.linearRampToValueAtTime(0,off);}
 const env=c.createGain();env.gain.setValueAtTime(0,c.currentTime);env.gain.linearRampToValueAtTime(1,c.currentTime+0.2);osc.connect(g);g.connect(env);env.connect(S.masterGain);osc.start();return{oscillators:[osc],gainNode:env,isBinaural:false};},
 play(f){if(S.activeSounds.has(f.id))return;Aud.ensure();Aud.resume();if(S.masterGain&&S.masterGain.gain.value<S.masterVol*.5)Aud.resetM();let sn;if(S.wave==='isochronal')sn=Aud._mkIso(f);else if(Aud._bin(f))sn=Aud._mkBin(f);else sn=Aud._mkSine(f);sn.freq=f;const ct=catFor(f.id);sn.color=ct?ct.hex:'#888';S.activeSounds.set(f.id,sn);},
@@ -396,7 +395,7 @@ UI.renderVL();if(has){Viz.start();Wake.acquire();}else{Viz.stop();Wake.release()
 
 timerD(){const el=document.getElementById('timer-disp');if(!S.timerDur||S.timerRem<=0){el.textContent='';return;}const m=Math.floor(S.timerRem/60),s=S.timerRem%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');},
 
-selectCat(id){S.catId=id;if(S.view==='play'&&S.mode==='single'){Aud.stopAll();S.playing=false;}UI.renderCats();UI.renderCards();UI.syncAll();},
+selectCat(id){S.catId=id;UI.renderCats();UI.renderCards();UI.syncAll();},
 
 selFreqPlay(f){Aud.ensure();Aud.resume();if(S.mode==='single'){if(S.activeSounds.has(f.id)){Aud.stopAll();S.playing=false;}else{Aud.stopAll();Aud.play(f);S.playing=true;}}else{if(S.activeSounds.has(f.id))Aud.stop(f.id);else Aud.play(f);S.playing=S.activeSounds.size>0;}UI.syncCards();UI.syncAll();},
 
