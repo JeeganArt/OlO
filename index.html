@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OlO — Therapeutic Sound Frequencies</title>
+  <meta name="description" content="Free browser-based sound therapy. Binaural beats, solfeggio frequencies, brainwave entrainment for sleep, focus, meditation, and healing." />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+    input[type="range"] { -webkit-appearance: none; appearance: none; }
+    select { font-family: inherit; }
+
+    :root {
+      --bg-base: #0d0d0f;
+      --bg-surface: #18181c;
+      --bg-card: #1e1e24;
+      --bg-hover: #26262e;
+      --text-primary: #f0ece4;
+      --text-secondary: #9a9590;
+      --text-muted: #5c5856;
+      --border-subtle: rgba(240,236,228,0.06);
+      --border-mid: rgba(240,236,228,0.10);
+      --radius-sm: 12px;
+      --radius-md: 16px;
+      --radius-lg: 20px;
+      --radius-xl: 24px;
+      --radius-pill: 9999px;
+      --col-sleep: #a78bba; --col-sleep-bg: rgba(167,139,186,0.12);
+      --col-meditation: #8b9fd4; --col-meditation-bg: rgba(139,159,212,0.12);
+      --col-relaxation: #7ec4b8; --col-relaxation-bg: rgba(126,196,184,0.12);
+      --col-focus: #e4c07a; --col-focus-bg: rgba(228,192,122,0.12);
+      --col-neural: #7aade4; --col-neural-bg: rgba(122,173,228,0.12);
+      --col-pain: #8dd4a0; --col-pain-bg: rgba(141,212,160,0.12);
+      --col-chakra: #d4a08b; --col-chakra-bg: rgba(212,160,139,0.12);
+      --col-solfeggio: #d48ba0; --col-solfeggio-bg: rgba(212,139,160,0.12);
+      --col-earth: #a0c4a0; --col-earth-bg: rgba(160,196,160,0.12);
+      --font-display: 'DM Sans', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    body { background: var(--bg-base); color: var(--text-primary); font-family: var(--font-body); min-height: 100dvh; overflow-x: hidden; line-height: 1.5; }
+
+    #header { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; background: rgba(13,13,15,0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-subtle); }
+    #brand { font-family: var(--font-display); font-size: 28px; letter-spacing: 0.08em; }
+    #header-controls { display: flex; align-items: center; gap: 16px; }
+    .header-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--bg-card); border: 1px solid var(--border-mid); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .header-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+    #nav-tabs { display: flex; gap: 4px; background: var(--bg-card); border-radius: var(--radius-pill); padding: 3px; border: 1px solid var(--border-subtle); }
+    .nav-tab { padding: 7px 16px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); transition: all 0.25s; }
+    .nav-tab.active { background: var(--text-primary); color: var(--bg-base); }
+    .nav-tab:hover:not(.active) { color: var(--text-secondary); }
+
+    #main { padding: 20px; padding-bottom: 200px; max-width: 900px; margin: 0 auto; }
+
+    #top-section { margin-bottom: 24px; background: var(--bg-card); border-radius: var(--radius-xl); border: 1px solid var(--border-subtle); padding: 20px; position: relative; overflow: hidden; }
+    #top-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.02), transparent 70%); pointer-events: none; }
+    #top-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; position: relative; z-index: 1; }
+    #top-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+    #top-status { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+
+    /* Fixed-height content area so switching views causes zero layout shift */
+    #top-content { height: 160px; position: relative; }
+    #viz-wrap-outer { position: absolute; inset: 0; display: flex; flex-direction: column; }
+    #viz-wrap-outer.hidden { display: none; }
+    #viz-wrap { position: relative; width: 100%; flex: 1; border-radius: var(--radius-md); overflow: hidden; }
+    #viz-canvas { display: block; width: 100%; height: 100%; }
+    #viz-empty { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 13px; font-weight: 500; }
+    #viz-layers { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .vlchip { display: flex; align-items: center; gap: 6px; padding: 4px 12px 4px 8px; border-radius: var(--radius-pill); background: rgba(255,255,255,0.06); font-size: 12px; font-weight: 500; color: var(--text-secondary); }
+    .vlchip .cdot { width: 6px; height: 6px; border-radius: 50%; animation: pulse-glow 1.5s ease-in-out infinite; }
+    .vlchip .crm { margin-left: 4px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
+    .vlchip .crm:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+
+    #jslots-wrap { position: absolute; inset: 0; display: none; flex-direction: column; }
+    #jslots-wrap.active { display: flex; }
+
+    #jslots-row { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; flex: 1; align-items: stretch; }
+    #jslots-row::-webkit-scrollbar { display: none; }
+    .jslot { flex-shrink: 0; width: 120px; border-radius: var(--radius-lg); border: 2px dashed var(--border-mid); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; transition: all 0.25s; position: relative; overflow: hidden; }
+    .jslot.empty .js-num { font-family: var(--font-display); font-size: 22px; color: var(--text-muted); opacity: 0.3; }
+    .jslot.empty .js-lbl { font-size: 10px; color: var(--text-muted); font-weight: 500; }
+    .jslot.highlight { border-color: var(--col-meditation); background: rgba(139,159,212,0.06); }
+    .jslot.filled { border-style: solid; border-color: transparent; padding: 12px; justify-content: flex-start; }
+    .jslot.filled .js-hz { font-family: var(--font-display); font-size: 24px; line-height: 1; }
+    .jslot.filled .js-hz span { font-size: 11px; opacity: 0.5; }
+    .jslot.filled .js-name { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.8); text-align: center; }
+    .jslot.filled .js-dur { font-size: 9px; color: rgba(255,255,255,0.5); margin-top: auto; display: flex; align-items: center; gap: 4px; }
+    .js-dur-btn { width: 18px; height: 18px; border-radius: 50%; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; line-height: 1; }
+    .js-dur-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+    .jslot .js-rm { position: absolute; top: 5px; right: 5px; width: 18px; height: 18px; border-radius: 50%; background: rgba(0,0,0,0.4); color: rgba(255,255,255,0.6); font-size: 11px; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transition: opacity 0.15s; }
+    .jslot.filled:hover .js-rm { opacity: 1; }
+    .jslot .js-rm:hover { background: rgba(0,0,0,0.6); color: #fff; }
+
+    #jprog { display: none; margin-top: 8px; }
+    #jprog.active { display: block; }
+    #jprog-bar-wrap { height: 4px; border-radius: 2px; background: rgba(255,255,255,0.08); overflow: hidden; margin-bottom: 6px; }
+    #jprog-bar { height: 100%; border-radius: 2px; background: var(--col-focus); width: 0%; transition: width 0.5s linear; }
+    #jprog-info { display: flex; align-items: center; justify-content: space-between; }
+    #jprog-cur { font-size: 12px; font-weight: 600; }
+    #jprog-time { font-size: 11px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+    #jctrl-row { display: flex; gap: 8px; margin-top: 8px; }
+    .jctl { padding: 8px 18px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 600; transition: all 0.2s; }
+    .jctl-pri { background: var(--text-primary); color: var(--bg-base); }
+    .jctl-pri:hover { box-shadow: 0 4px 16px rgba(240,236,228,0.2); }
+    .jctl-pri:disabled { background: var(--bg-hover); color: var(--text-muted); box-shadow: none; }
+    .jctl-sec { background: rgba(255,255,255,0.06); color: var(--text-secondary); }
+    .jctl-sec:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+
+    #cat-scroll { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 4px 0 16px; -webkit-overflow-scrolling: touch; }
+    #cat-scroll::-webkit-scrollbar { display: none; }
+    .cat-pill { flex-shrink: 0; padding: 8px 18px; border-radius: var(--radius-pill); font-size: 13px; font-weight: 600; letter-spacing: 0.02em; color: var(--text-secondary); background: var(--bg-card); border: 1px solid var(--border-subtle); transition: all 0.25s; white-space: nowrap; }
+    .cat-pill:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .cat-pill.active { color: #fff; border-color: transparent; }
+
+    #cat-header { display: none; }
+
+    #freq-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+    .fcard { position: relative; border-radius: var(--radius-lg); padding: 20px; cursor: pointer; border: 1px solid transparent; transition: all 0.25s ease; overflow: hidden; outline: none; min-height: 140px; display: flex; flex-direction: column; justify-content: space-between; }
+    .fcard::before { content: ''; position: absolute; inset: 0; border-radius: var(--radius-lg); opacity: 0; transition: opacity 0.3s; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.06), transparent 70%); }
+    .fcard:hover::before { opacity: 1; }
+    .fcard:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+    .fcard.active { border-color: rgba(255,255,255,0.2); box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 8px 32px rgba(0,0,0,0.4); }
+    .fcard .fcard-hz { font-family: var(--font-display); font-size: 36px; line-height: 1; letter-spacing: -0.02em; }
+    .fcard .fcard-unit { font-family: var(--font-body); font-size: 14px; font-weight: 400; opacity: 0.6; margin-left: 2px; }
+    .fcard .fcard-name { font-size: 13px; font-weight: 600; margin-top: 8px; color: rgba(255,255,255,0.9); }
+    .fcard .fcard-desc { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 4px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .fcard .fcard-source { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 8px; font-style: italic; }
+    .fcard .fcard-dot { position: absolute; top: 14px; right: 14px; width: 8px; height: 8px; border-radius: 50%; background: #fff; opacity: 0; transition: opacity 0.2s; }
+    .fcard.active .fcard-dot { opacity: 1; animation: pulse-glow 1.5s ease-in-out infinite; }
+    .fcard .fcard-badge { display: inline-block; margin-top: 6px; font-size: 9px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 8px; border-radius: var(--radius-pill); background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); }
+    .fcard { animation: card-in 0.3s ease both; }
+    .fcard:nth-child(1){animation-delay:0s}.fcard:nth-child(2){animation-delay:.04s}.fcard:nth-child(3){animation-delay:.08s}.fcard:nth-child(4){animation-delay:.12s}.fcard:nth-child(5){animation-delay:.16s}.fcard:nth-child(6){animation-delay:.2s}.fcard:nth-child(n+7){animation-delay:.24s}
+    @keyframes card-in { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes pulse-glow { 0%,100%{transform:scale(1);box-shadow:0 0 6px rgba(255,255,255,.4)} 50%{transform:scale(1.4);box-shadow:0 0 12px rgba(255,255,255,.6)} }
+
+    #control-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; background: rgba(18,18,20,0.96); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid var(--border-subtle); padding: 14px 24px; padding-bottom: max(14px, env(safe-area-inset-bottom)); }
+    #control-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 16px; }
+    #ctrl-play { width: 48px; height: 48px; border-radius: 50%; background: var(--text-primary); color: var(--bg-base); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; box-shadow: 0 4px 20px rgba(240,236,228,0.15); }
+    #ctrl-play:hover{transform:scale(1.06)}#ctrl-play:active{transform:scale(.95)}#ctrl-play:disabled{background:var(--bg-card);color:var(--text-muted);box-shadow:none}
+    #ctrl-info { flex: 1; min-width: 0; }
+    #ctrl-name { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #ctrl-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+    #ctrl-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+    #wave-pills { display: flex; background: var(--bg-card); border-radius: var(--radius-pill); border: 1px solid var(--border-subtle); overflow: hidden; }
+    .wpill { padding: 6px 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); transition: all 0.2s; }
+    .wpill.active { background: var(--text-primary); color: var(--bg-base); }
+    .wpill:hover:not(.active) { color: var(--text-secondary); }
+    #mode-pill { display: flex; align-items: center; gap: 8px; }
+    .mode-lbl { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); transition: color 0.2s; }
+    .mode-lbl.on { color: var(--text-primary); }
+    #mode-sw { position: relative; width: 38px; height: 20px; display: flex; align-items: center; }
+    .sw-track { width: 38px; height: 20px; border-radius: var(--radius-pill); background: var(--bg-hover); border: 1px solid var(--border-mid); transition: all 0.2s; }
+    .sw-thumb { position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: var(--text-muted); transition: all 0.2s; }
+    #mode-sw[aria-checked="true"] .sw-track{background:var(--col-meditation);border-color:var(--col-meditation)}
+    #mode-sw[aria-checked="true"] .sw-thumb{transform:translateX(18px);background:#fff}
+    #vol-group { display: flex; align-items: center; gap: 6px; }
+    #vol-group svg { color: var(--text-muted); flex-shrink: 0; }
+    #master-vol { width: 80px; height: 4px; border-radius: 2px; accent-color: var(--text-primary); }
+    #master-vol::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:rgba(255,255,255,.12)}
+    #master-vol::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--text-primary);margin-top:-5px}
+    #master-vol::-moz-range-track{height:4px;border-radius:2px;background:rgba(255,255,255,.12)}
+    #master-vol::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--text-primary);border:none}
+    #timer-group { display: flex; align-items: center; gap: 6px; }
+    #timer-sel { background: var(--bg-card); color: var(--text-secondary); border: 1px solid var(--border-mid); border-radius: var(--radius-pill); font-size: 11px; font-weight: 600; padding: 4px 10px; cursor: pointer; outline: none; }
+    #timer-sel:focus { border-color: var(--col-meditation); }
+    #timer-disp { font-size: 13px; font-weight: 700; color: var(--col-focus); font-variant-numeric: tabular-nums; min-width: 40px; }
+
+    #share-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 500; display: none; align-items: center; justify-content: center; padding: 20px; }
+    #share-overlay.visible { display: flex; }
+    #share-modal { background: var(--bg-surface); border-radius: var(--radius-xl); border: 1px solid var(--border-mid); padding: 28px; max-width: 420px; width: 100%; box-shadow: 0 24px 64px rgba(0,0,0,0.5); }
+    #share-modal h3 { font-family: var(--font-display); font-size: 22px; margin-bottom: 8px; }
+    #share-modal p { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
+    #share-url { width: 100%; padding: 10px 14px; border-radius: var(--radius-md); background: var(--bg-card); border: 1px solid var(--border-mid); color: var(--text-primary); font-family: var(--font-body); font-size: 12px; outline: none; margin-bottom: 12px; }
+    #share-url:focus { border-color: var(--col-meditation); }
+    #share-actions { display: flex; gap: 8px; }
+    .share-btn { flex: 1; padding: 10px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; transition: all 0.2s; }
+    .share-copy { background: var(--text-primary); color: var(--bg-base); }
+    .share-copy:hover { opacity: 0.9; }
+    .share-close { background: var(--bg-card); color: var(--text-secondary); border: 1px solid var(--border-mid); }
+    .share-close:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+    @media (max-width: 640px) {
+      #header{padding:12px 16px}#brand{font-size:24px}#main{padding:16px;padding-bottom:180px}
+      #freq-grid{grid-template-columns:repeat(2,1fr);gap:10px}.fcard{padding:14px;min-height:120px}.fcard .fcard-hz{font-size:28px}
+      #control-bar{padding:10px 16px}#ctrl-right{flex-wrap:wrap;gap:8px}#master-vol{width:60px}#top-content{height:120px}
+      .jslot{width:90px}.mode-lbl{display:none}
+    }
+    @media (max-width: 400px) {
+      #freq-grid{grid-template-columns:1fr 1fr}.fcard .fcard-desc{display:none}#wave-pills{display:none}
+    }
+  </style>
+</head>
+<body>
+  <header id="header">
+    <div id="brand">OlO</div>
+    <div id="header-controls">
+      <nav id="nav-tabs">
+        <button class="nav-tab active" data-view="play">Play</button>
+        <button class="nav-tab" data-view="journey">Journey</button>
+      </nav>
+      <button class="header-btn" id="share-btn" title="Share">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+      </button>
+    </div>
+  </header>
+  <div id="main">
+    <section id="top-section">
+      <div id="top-header">
+        <span id="top-title">Waveform</span>
+        <span id="top-status"></span>
+      </div>
+      <div id="top-content">
+        <div id="viz-wrap-outer">
+          <div id="viz-wrap"><canvas id="viz-canvas"></canvas><div id="viz-empty">Select a frequency to begin</div></div>
+          <div id="viz-layers"></div>
+        </div>
+        <div id="jslots-wrap">
+          <div id="jslots-row"></div>
+          <div id="jprog"><div id="jprog-bar-wrap"><div id="jprog-bar"></div></div><div id="jprog-info"><span id="jprog-cur"></span><span id="jprog-time"></span></div></div>
+          <div id="jctrl-row">
+            <button class="jctl jctl-pri" id="j-play" disabled>Play Journey</button>
+            <button class="jctl jctl-sec" id="j-clear">Clear</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div id="cat-scroll"></div>
+    <div id="cat-header"><h2 id="cat-title"></h2><p id="cat-desc"></p></div>
+    <div id="freq-grid" role="list"></div>
+  </div>
+  <div id="share-overlay"><div id="share-modal"><h3>Share Session</h3><p>Copy this link to share your current configuration.</p><input type="text" id="share-url" readonly><div id="share-actions"><button class="share-btn share-copy" id="share-copy-btn">Copy Link</button><button class="share-btn share-close" id="share-close-btn">Close</button></div></div></div>
+  <div id="control-bar"><div id="control-inner">
+    <button id="ctrl-play" aria-label="Play" disabled><svg id="ctrl-play-icon" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+    <div id="ctrl-info"><div id="ctrl-name">Select a frequency</div><div id="ctrl-sub"></div></div>
+    <div id="ctrl-right">
+      <div id="wave-pills"><button class="wpill active" data-wave="sine">Sine</button><button class="wpill" data-wave="binaural">Binaural</button><button class="wpill" data-wave="isochronal">Iso</button></div>
+      <div id="mode-pill"><span class="mode-lbl on" id="m-single">Single</span><button id="mode-sw" role="switch" aria-checked="false" aria-label="Layer mode"><div class="sw-track"></div><div class="sw-thumb"></div></button><span class="mode-lbl" id="m-layer">Layer</span></div>
+      <div id="vol-group"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg><input type="range" id="master-vol" min="0" max="1" step="0.01" value="0.5" aria-label="Volume"></div>
+      <div id="timer-group"><select id="timer-sel" aria-label="Timer"><option value="0">&infin;</option><option value="300">5m</option><option value="900">15m</option><option value="1800">30m</option><option value="3600">60m</option></select><span id="timer-disp"></span></div>
+    </div>
+  </div></div>
+<script>
+(function(){
+'use strict';
+const CATEGORIES=[
+{id:'deep-sleep',name:'Deep Sleep',color:'var(--col-sleep)',bg:'var(--col-sleep-bg)',hex:'#a78bba',desc:'Delta brainwave frequencies for deep sleep and cellular restoration.'},
+{id:'meditation',name:'Meditation',color:'var(--col-meditation)',bg:'var(--col-meditation-bg)',hex:'#8b9fd4',desc:'Theta frequencies for shamanic and deep meditative traditions.'},
+{id:'relaxation',name:'Relaxation',color:'var(--col-relaxation)',bg:'var(--col-relaxation-bg)',hex:'#7ec4b8',desc:'Alpha frequencies for calm alertness and stress reduction.'},
+{id:'focus',name:'Focus',color:'var(--col-focus)',bg:'var(--col-focus-bg)',hex:'#e4c07a',desc:'Low beta frequencies for concentration and active learning.'},
+{id:'neural',name:'Neural',color:'var(--col-neural)',bg:'var(--col-neural-bg)',hex:'#7aade4',desc:'Gamma frequencies with documented brain health effects.'},
+{id:'pain',name:'Healing',color:'var(--col-pain)',bg:'var(--col-pain-bg)',hex:'#8dd4a0',desc:'Clinically studied frequencies for pain relief and restoration.'},
+{id:'chakra',name:'Chakra',color:'var(--col-chakra)',bg:'var(--col-chakra-bg)',hex:'#d4a08b',desc:'Frequencies from OM spectral analysis, mapped to chakra centers.'},
+{id:'solfeggio',name:'Solfeggio',color:'var(--col-solfeggio)',bg:'var(--col-solfeggio-bg)',hex:'#d48ba0',desc:'Ancient solfège scale frequencies for healing and transformation.'},
+{id:'earth',name:'Earth',color:'var(--col-earth)',bg:'var(--col-earth-bg)',hex:'#a0c4a0',desc:"Schumann resonances — Earth's electromagnetic cavity frequencies."},
+];
+const FREQ_DATA={
+'deep-sleep':[
+{id:'ds-2',hz:2,name:'Deep Delta',desc:'Delta wave for deep dreamless sleep and cellular restoration.',source:'Stapleton et al., 2016',binaural:true,carrierHz:200},
+{id:'ds-3',hz:3,name:'Delta Restoration',desc:'Deep delta for unconscious restoration and immune support.',source:'Hobson & McCarley, 1977',binaural:true,carrierHz:200},
+{id:'ds-35',hz:3.5,name:'Delta/Theta Border',desc:'Border state for whole body healing and tissue repair.',source:'Peng et al., 2019',binaural:true,carrierHz:200},
+],
+'meditation':[
+{id:'med-45',hz:4.5,name:'Shamanic Trance',desc:'Theta frequency used in shamanic practice for 30,000+ years.',source:'Neher, 1961; Maxfield, 1990',binaural:true,carrierHz:200},
+{id:'med-6',hz:6,name:'Deep Theta',desc:'Deep theta state for vivid inner imagery and creative insight.',source:'Banquet, 1973',binaural:true,carrierHz:200},
+{id:'med-7',hz:7,name:'Creative Theta',desc:'Deep meditation and creative visualization.',source:'Niedermeyer & da Silva, 2004',binaural:true,carrierHz:200},
+{id:'med-783',hz:7.83,name:'Schumann Resonance',desc:"Earth's fundamental electromagnetic resonance frequency.",source:'Schumann, 1952; König, 1979',binaural:true,carrierHz:200},
+],
+'relaxation':[
+{id:'rel-8',hz:8,name:'Alpha Entry',desc:'Light alpha for stress reduction and calm awareness.',source:'Berger, 1929; Klimesch, 1999',binaural:true,carrierHz:200},
+{id:'rel-10',hz:10,name:'Alpha Peak',desc:'Optimal alpha for calm alertness, insomnia and migraine relief.',source:'Walker & Duan, 2007',binaural:true,carrierHz:200},
+{id:'rel-105',hz:10.5,name:'Healing Alpha',desc:'Body awareness and healing meditation bridge state.',source:'Fehmi & Robbins, 2007',binaural:true,carrierHz:200},
+{id:'rel-12',hz:12,name:'Stable Alpha',desc:'Mental stability, sensorimotor rhythm and relaxation.',source:'Sterman & Friar, 1972',binaural:true,carrierHz:200},
+],
+'focus':[
+{id:'foc-14',hz:14,name:'Schumann 2nd',desc:'Alert concentration with a grounded quality.',source:'Schumann, 1952',binaural:true,carrierHz:200},
+{id:'foc-15',hz:15,name:'Mental Sharpness',desc:'Low beta for focused problem solving and reasoning.',source:'Engel & Fries, 2010',binaural:true,carrierHz:200},
+{id:'foc-18',hz:18,name:'Active Learning',desc:'Beta wave for active learning and information processing.',source:'Klimesch, 2012',binaural:true,carrierHz:200},
+{id:'foc-20',hz:20,name:'GABA Elevation',desc:'GABA neurotransmitter elevation for neural balance.',source:'Herrmann et al., 2010',binaural:true,carrierHz:200},
+],
+'neural':[
+{id:'neu-40',hz:40,name:'Gamma Master',desc:'81% fibromyalgia improvement, 53\u201368% amyloid-beta reduction.',source:'Naghdi et al., 2019; Iaccarino et al., 2016',binaural:false},
+{id:'neu-10',hz:10,name:'Thalamic Alpha',desc:'Optimizes the thalamocortical feedback loop when paired with 40 Hz.',source:'Llinás & Ribary, 1993',binaural:true,carrierHz:200},
+],
+'pain':[
+{id:'pai-26',hz:26,name:'Whole Body Vibration',desc:'Enhanced blood flow and endothelial stimulation.',source:'Rittweger et al., 2000'},
+{id:'pai-30',hz:30,name:'Bone Activation',desc:'Bone cell activation and osteogenic differentiation.',source:'Tanaka et al., 2003',binaural:true,carrierHz:200},
+{id:'pai-40',hz:40,name:'Fibromyalgia Relief',desc:'81% improvement in fibromyalgia clinical study.',source:'Naghdi et al., 2019',binaural:false},
+{id:'pai-50',hz:50,name:'Nitric Oxide +374%',desc:'374% increase in nitric oxide for cardiovascular support.',source:'Lundeberg et al., 2004'},
+{id:'pai-52',hz:52,name:'Pain Relief',desc:'Low back and menstrual pain relief.',source:'Laufer et al., 2005'},
+{id:'pai-86',hz:86,name:'CRPS Relief',desc:'~50% pain reduction in Complex Regional Pain Syndrome.',source:'Raso et al., 2005'},
+{id:'pai-100',hz:100,name:'Blood Flow',desc:'Enhanced blood flow via endothelial nitric oxide release.',source:'Weintraub, 2004'},
+],
+'chakra':[
+{id:'cha-144',hz:144,name:'Root',desc:'Muladhara — grounding, stability.',source:'OM spectral analysis'},
+{id:'cha-194',hz:194,name:'Sacral',desc:'Svadhisthana — creativity, emotional flow.',source:'OM spectral analysis'},
+{id:'cha-225',hz:225,name:'Solar Plexus',desc:'Manipura — personal power, will.',source:'OM spectral analysis'},
+{id:'cha-275',hz:275,name:'Heart',desc:'Anahata — love, compassion.',source:'OM spectral analysis'},
+{id:'cha-325',hz:325,name:'Throat',desc:'Vishuddha — expression, truth.',source:'OM spectral analysis'},
+{id:'cha-375',hz:375,name:'Third Eye',desc:'Ajna — intuition, inner sight.',source:'OM spectral analysis'},
+{id:'cha-475',hz:475,name:'Crown',desc:'Sahasrara — unity consciousness.',source:'OM spectral analysis'},
+],
+'solfeggio':[
+{id:'sol-396',hz:396,name:'UT — Liberation',desc:'Liberating guilt and fear.',source:'Horowitz & Puleo, 1999'},
+{id:'sol-417',hz:417,name:'RE — Change',desc:'Facilitating change and transformation.',source:'Horowitz & Puleo, 1999'},
+{id:'sol-528',hz:528,name:'MI — Love',desc:'DNA repair, heart coherence.',source:'Rein, 1988; Horowitz, 1998'},
+{id:'sol-639',hz:639,name:'FA — Connection',desc:'Harmonizing relationships.',source:'Horowitz & Puleo, 1999'},
+{id:'sol-741',hz:741,name:'SOL — Expression',desc:'Expression and cellular cleansing.',source:'Horowitz & Puleo, 1999'},
+{id:'sol-852',hz:852,name:'LA — Intuition',desc:'Awakening intuition, pineal activation.',source:'Horowitz & Puleo, 1999'},
+{id:'sol-963',hz:963,name:'Crown Activation',desc:'Connection to pure consciousness.',source:'Horowitz & Puleo, 1999'},
+],
+'earth':[
+{id:'ear-783',hz:7.83,name:'Schumann 1st',desc:"Earth's fundamental resonance.",source:'Schumann, 1952',binaural:true,carrierHz:200},
+{id:'ear-141',hz:14.1,name:'Schumann 2nd',desc:'Alert yet grounded mental states.',source:'Schumann & König, 1954',binaural:true,carrierHz:200},
+{id:'ear-203',hz:20.3,name:'Schumann 3rd',desc:'Cognitive enhancement.',source:'Williams, 1992',binaural:true,carrierHz:200},
+{id:'ear-264',hz:26.4,name:'Schumann 4th',desc:'Physical and energetic stabilization.',source:'Williams, 1992',binaural:true,carrierHz:200},
+{id:'ear-338',hz:33.8,name:'Schumann 5th',desc:'High gamma adjacent resonance.',source:'Williams, 1992',binaural:true,carrierHz:200},
+],
+};
+
+const S={catId:'deep-sleep',mode:'single',wave:'sine',activeSounds:new Map(),masterVol:0.5,playing:false,ctx:null,masterGain:null,analyser:null,vizRaf:null,timerDur:0,timerRem:0,timerInterval:null,timerFading:false,view:'play',jSlots:[null,null,null,null,null,null],jDurs:[5,5,5,5,5,5],jPlaying:false,jInterval:null,jStep:0,jStepTime:0};
+
+function findFreq(fid){for(const c of Object.keys(FREQ_DATA)){const f=FREQ_DATA[c].find(x=>x.id===fid);if(f)return f;}return null;}
+function catFor(fid){return CATEGORIES.find(c=>FREQ_DATA[c.id]?.some(f=>f.id===fid));}
+
+const Aud={
+ensure(){if(S.ctx)return;const C=window.AudioContext||window.webkitAudioContext;S.ctx=new C();S.masterGain=S.ctx.createGain();S.masterGain.gain.setValueAtTime(S.masterVol,S.ctx.currentTime);S.analyser=S.ctx.createAnalyser();S.analyser.fftSize=2048;S.analyser.smoothingTimeConstant=0.8;S.masterGain.connect(S.analyser);S.analyser.connect(S.ctx.destination);},
+resume(){if(S.ctx&&S.ctx.state==='suspended')S.ctx.resume();},
+_bin(f){return S.wave==='binaural'||f.binaural||f.hz<20;},
+_mkSine(f){const c=S.ctx,o=c.createOscillator();o.type='sine';o.frequency.setValueAtTime(f.hz,c.currentTime);const g=c.createGain();g.gain.setValueAtTime(0,c.currentTime);g.gain.linearRampToValueAtTime(1,c.currentTime+.2);o.connect(g);g.connect(S.masterGain);o.start();return{oscillators:[o],gainNode:g,isBinaural:false};},
+_mkBin(f){const c=S.ctx,cr=f.carrierHz||200,bt=f.hz,g=c.createGain();g.gain.setValueAtTime(0,c.currentTime);g.gain.linearRampToValueAtTime(1,c.currentTime+.2);const m=c.createChannelMerger(2);const oL=c.createOscillator();oL.type='sine';oL.frequency.setValueAtTime(cr,c.currentTime);const gL=c.createGain();gL.gain.setValueAtTime(1,c.currentTime);oL.connect(gL);gL.connect(m,0,0);const oR=c.createOscillator();oR.type='sine';oR.frequency.setValueAtTime(cr+bt,c.currentTime);const gR=c.createGain();gR.gain.setValueAtTime(1,c.currentTime);oR.connect(gR);gR.connect(m,0,1);m.connect(g);g.connect(S.masterGain);oL.start();oR.start();return{oscillators:[oL,oR],gainNode:g,isBinaural:true};},
+_mkIso(f){const c=S.ctx;const carrier=f.hz<20?(f.carrierHz||200):f.hz;const rate=f.hz<20?f.hz:Math.min(f.hz,40);const osc=c.createOscillator();osc.type='sine';osc.frequency.setValueAtTime(carrier,c.currentTime);const g=c.createGain();g.gain.setValueAtTime(0,c.currentTime);
+// Schedule smooth pulses: ramp up/down each cycle to avoid clicks
+const pulseDur=1/rate;const ramp=Math.min(pulseDur*0.15,0.01);const startT=c.currentTime;const totalDur=120;// schedule 2 min of pulses, re-triggered if needed
+for(let t=0;t<totalDur;t+=pulseDur){const on=startT+t;const off=on+pulseDur*0.5;g.gain.setValueAtTime(0,on);g.gain.linearRampToValueAtTime(1,on+ramp);g.gain.setValueAtTime(1,off-ramp);g.gain.linearRampToValueAtTime(0,off);}
+const env=c.createGain();env.gain.setValueAtTime(0,c.currentTime);env.gain.linearRampToValueAtTime(1,c.currentTime+0.2);osc.connect(g);g.connect(env);env.connect(S.masterGain);osc.start();return{oscillators:[osc],gainNode:env,isBinaural:false};},
+play(f){if(S.activeSounds.has(f.id))return;Aud.ensure();Aud.resume();if(S.masterGain&&S.masterGain.gain.value<S.masterVol*.5)Aud.resetM();let sn;if(S.wave==='isochronal')sn=Aud._mkIso(f);else if(Aud._bin(f))sn=Aud._mkBin(f);else sn=Aud._mkSine(f);sn.freq=f;const ct=catFor(f.id);sn.color=ct?ct.hex:'#888';S.activeSounds.set(f.id,sn);},
+stop(id){const s=S.activeSounds.get(id);if(!s)return;const now=S.ctx.currentTime;s.gainNode.gain.cancelScheduledValues(now);s.gainNode.gain.setValueAtTime(s.gainNode.gain.value,now);s.gainNode.gain.linearRampToValueAtTime(0,now+.2);S.activeSounds.delete(id);setTimeout(()=>{s.oscillators.forEach(o=>{try{o.stop();o.disconnect();}catch(e){}});try{s.gainNode.disconnect();}catch(e){}},250);},
+stopAll(){const sv=new Map(S.activeSounds);S.activeSounds.clear();if(!S.ctx)return;for(const[,s]of sv){const now=S.ctx.currentTime;s.gainNode.gain.cancelScheduledValues(now);s.gainNode.gain.setValueAtTime(s.gainNode.gain.value,now);s.gainNode.gain.linearRampToValueAtTime(0,now+.2);setTimeout(()=>{s.oscillators.forEach(o=>{try{o.stop();o.disconnect();}catch(e){}});try{s.gainNode.disconnect();}catch(e){}},250);}},
+setM(v){S.masterVol=v;if(!S.masterGain)return;const now=S.ctx.currentTime;S.masterGain.gain.cancelScheduledValues(now);S.masterGain.gain.setValueAtTime(Math.max(S.masterGain.gain.value,.001),now);S.masterGain.gain.linearRampToValueAtTime(v,now+.05);},
+fadeAll(sec){if(!S.masterGain||!S.ctx)return;const now=S.ctx.currentTime;S.masterGain.gain.cancelScheduledValues(now);S.masterGain.gain.setValueAtTime(S.masterGain.gain.value,now);S.masterGain.gain.exponentialRampToValueAtTime(.001,now+sec);},
+resetM(){if(!S.masterGain||!S.ctx)return;const now=S.ctx.currentTime;S.masterGain.gain.cancelScheduledValues(now);S.masterGain.gain.setValueAtTime(.001,now);S.masterGain.gain.linearRampToValueAtTime(S.masterVol,now+.1);},
+};
+
+const Timer={
+start(s){Timer.stop();if(!s){UI.timerD();return;}S.timerDur=s;S.timerRem=s;S.timerFading=false;UI.timerD();S.timerInterval=setInterval(Timer.tick,1000);},
+tick(){S.timerRem--;UI.timerD();if(S.timerRem<=5&&!S.timerFading){S.timerFading=true;Aud.fadeAll(5);}if(S.timerRem<=0){Timer.stop();Aud.stopAll();S.playing=false;UI.syncAll();}},
+stop(){if(S.timerInterval)clearInterval(S.timerInterval);S.timerInterval=null;S.timerDur=0;S.timerRem=0;},
+};
+
+const Viz={
+start(){Viz.stop();const canvas=document.getElementById('viz-canvas'),c2=canvas.getContext('2d'),wrap=document.getElementById('viz-wrap');
+function draw(){S.vizRaf=requestAnimationFrame(draw);const w=wrap.clientWidth,h=wrap.clientHeight;if(canvas.width!==w*2)canvas.width=w*2;if(canvas.height!==h*2)canvas.height=h*2;canvas.style.width=w+'px';canvas.style.height=h+'px';c2.clearRect(0,0,canvas.width,canvas.height);
+if(!S.analyser||S.activeSounds.size===0){document.getElementById('viz-empty').style.display='flex';return;}document.getElementById('viz-empty').style.display='none';
+const bL=S.analyser.frequencyBinCount,data=new Uint8Array(bL);S.analyser.getByteTimeDomainData(data);const sounds=[...S.activeSounds.values()],cw=canvas.width,ch=canvas.height;
+sounds.forEach((sn,idx)=>{c2.beginPath();c2.strokeStyle=sn.color;c2.lineWidth=2.5;c2.globalAlpha=.7;const off=(idx-(sounds.length-1)/2)*(ch*.08);const sl=cw/bL;for(let i=0;i<bL;i++){const v=data[i]/128,y=(v*ch/2)+off;if(i===0)c2.moveTo(0,y);else c2.lineTo(i*sl,y);}c2.stroke();c2.globalAlpha=1;});
+if(sounds.length===1){c2.beginPath();c2.strokeStyle=sounds[0].color;c2.lineWidth=8;c2.globalAlpha=.12;const sl=cw/bL;for(let i=0;i<bL;i++){const v=data[i]/128,y=v*ch/2;if(i===0)c2.moveTo(0,y);else c2.lineTo(i*sl,y);}c2.stroke();c2.globalAlpha=1;}}
+draw();},
+stop(){if(S.vizRaf)cancelAnimationFrame(S.vizRaf);S.vizRaf=null;},
+};
+
+const Wake={_l:null,async acquire(){if(!('wakeLock' in navigator))return;try{Wake._l=await navigator.wakeLock.request('screen');}catch(e){}},release(){if(Wake._l){Wake._l.release().catch(()=>{});Wake._l=null;}}};
+
+const UI={
+renderCats(){document.getElementById('cat-scroll').innerHTML=CATEGORIES.map(c=>`<button class="cat-pill${c.id===S.catId?' active':''}" data-cat="${c.id}" style="${c.id===S.catId?`background:${c.hex};border-color:${c.hex};color:#fff`:''}">${c.name}</button>`).join('');},
+
+renderCards(){const cat=CATEGORIES.find(c=>c.id===S.catId);document.getElementById('cat-title').textContent=cat.name;document.getElementById('cat-desc').textContent=cat.desc;
+const freqs=FREQ_DATA[S.catId]||[];
+document.getElementById('freq-grid').innerHTML=freqs.map(f=>{const isBin=f.binaural&&f.hz<20;
+return`<div class="fcard" data-fid="${f.id}" tabindex="0" role="listitem" style="background:${cat.bg};color:${cat.hex}"><div><div class="fcard-hz">${f.hz}<span class="fcard-unit">Hz</span></div><div class="fcard-name" style="color:${cat.hex}">${f.name}</div><div class="fcard-desc">${f.desc}</div>${isBin?'<span class="fcard-badge">Binaural</span>':''}</div><div class="fcard-source">${f.source}</div><div class="fcard-dot" style="background:${cat.hex}"></div></div>`;}).join('');
+UI.syncCards();},
+
+syncCards(){const isJ=S.view==='journey';document.querySelectorAll('.fcard').forEach(card=>{const fid=card.dataset.fid;const on=isJ?S.jSlots.some(s=>s&&s.id===fid):S.activeSounds.has(fid);card.classList.toggle('active',on);});},
+
+renderVL(){const el=document.getElementById('viz-layers');if(S.activeSounds.size===0){el.innerHTML='';return;}el.innerHTML=[...S.activeSounds.values()].map(s=>`<div class="vlchip"><span class="cdot" style="background:${s.color}"></span><span>${s.freq.hz} Hz</span><span class="crm" data-rid="${s.freq.id}">&times;</span></div>`).join('');},
+
+renderJS(){const el=document.getElementById('jslots-row');const nextEmpty=S.jSlots.findIndex(s=>s===null);
+el.innerHTML=S.jSlots.map((slot,i)=>{if(!slot){return`<div class="jslot empty${i===nextEmpty?' highlight':''}" data-idx="${i}"><div class="js-num">${i+1}</div><div class="js-lbl">${i===nextEmpty?'Next':''}</div></div>`;}
+const cat=catFor(slot.id),col=cat?cat.hex:'#888',bg=cat?cat.bg:'var(--bg-card)';const dur=S.jDurs[i];
+return`<div class="jslot filled" data-idx="${i}" draggable="true" style="background:${bg};color:${col}"><div class="js-hz" style="color:${col}">${slot.hz}<span>Hz</span></div><div class="js-name">${slot.name}</div><div class="js-dur"><span class="js-dur-btn" data-idx="${i}" data-dir="-1">&minus;</span><span>${dur}m</span><span class="js-dur-btn" data-idx="${i}" data-dir="1">+</span></div><div class="js-rm" data-idx="${i}">&times;</div></div>`;}).join('');
+document.getElementById('j-play').disabled=!S.jSlots.some(Boolean);},
+
+switchView(v){S.view=v;document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active',t.dataset.view===v));
+const isJ=v==='journey';document.getElementById('viz-wrap-outer').classList.toggle('hidden',isJ);document.getElementById('jslots-wrap').classList.toggle('active',isJ);
+document.getElementById('top-title').textContent=isJ?'Journey':'Waveform';document.getElementById('top-status').textContent=isJ?'Tap a frequency below to fill slots':'';
+if(isJ)UI.renderJS();UI.syncCards();UI.syncAll();},
+
+syncAll(){const btn=document.getElementById('ctrl-play'),has=S.activeSounds.size>0;btn.disabled=!has;
+document.getElementById('ctrl-play-icon').innerHTML=has?'<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>':'<path d="M8 5v14l11-7z"/>';
+btn.setAttribute('aria-label',has?'Stop':'Play');
+const nm=document.getElementById('ctrl-name'),sb=document.getElementById('ctrl-sub');
+if(!has){nm.textContent='Select a frequency';sb.textContent='';}else{const ss=[...S.activeSounds.values()];if(ss.length===1){nm.textContent=ss[0].freq.hz+' Hz \u2014 '+ss[0].freq.name;const ct=catFor(ss[0].freq.id);sb.textContent=ct?ct.name:'';}else{nm.textContent=ss.length+' frequencies active';sb.textContent=ss.map(s=>s.freq.hz+' Hz').join(' \u00b7 ');}}
+if(S.view==='play'){const vs=document.getElementById('top-status');if(has){const w=S.wave==='binaural'?'Binaural':S.wave==='isochronal'?'Isochronal':'Sine';vs.textContent=w+' \u00b7 '+S.activeSounds.size+' layer'+(S.activeSounds.size>1?'s':'');}else vs.textContent='';}
+UI.renderVL();if(has){Viz.start();Wake.acquire();}else{Viz.stop();Wake.release();}},
+
+timerD(){const el=document.getElementById('timer-disp');if(!S.timerDur||S.timerRem<=0){el.textContent='';return;}const m=Math.floor(S.timerRem/60),s=S.timerRem%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');},
+
+selectCat(id){S.catId=id;if(S.view==='play'&&S.mode==='single'){Aud.stopAll();S.playing=false;}UI.renderCats();UI.renderCards();UI.syncAll();},
+
+selFreqPlay(f){Aud.ensure();Aud.resume();if(S.mode==='single'){if(S.activeSounds.has(f.id)){Aud.stopAll();S.playing=false;}else{Aud.stopAll();Aud.play(f);S.playing=true;}}else{if(S.activeSounds.has(f.id))Aud.stop(f.id);else Aud.play(f);S.playing=S.activeSounds.size>0;}UI.syncCards();UI.syncAll();},
+
+selFreqJ(f){const ni=S.jSlots.findIndex(s=>s===null);if(ni===-1)return;S.jSlots[ni]=f;UI.renderJS();UI.syncCards();},
+};
+
+const Journey={
+start(){const filled=S.jSlots.filter(Boolean);if(!filled.length)return;Aud.stopAll();S.jPlaying=true;S.jStep=S.jSlots.findIndex(s=>s!==null);S.jStepTime=0;
+document.getElementById('jprog').classList.add('active');document.getElementById('j-play').textContent='Stop';
+Journey.playStep(S.jStep);
+S.jInterval=setInterval(()=>{S.jStepTime++;const fi=S.jSlots.reduce((a,s,i)=>{if(s)a.push(i);return a;},[]);const totalTime=fi.reduce((a,i)=>a+S.jDurs[i]*60,0);const si=fi.indexOf(S.jStep);const elapsed=fi.slice(0,si).reduce((a,i)=>a+S.jDurs[i]*60,0)+S.jStepTime;
+document.getElementById('jprog-bar').style.width=(elapsed/totalTime*100)+'%';const rem=totalTime-elapsed;const m=Math.floor(rem/60),s=rem%60;document.getElementById('jprog-time').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+' left';
+const stepDurSec=S.jDurs[S.jStep]*60;if(S.jStepTime>=stepDurSec){S.jStepTime=0;let nx=-1;for(let i=S.jStep+1;i<S.jSlots.length;i++){if(S.jSlots[i]){nx=i;break;}}if(nx===-1){Journey.stop();return;}S.jStep=nx;Aud.stopAll();setTimeout(()=>Journey.playStep(nx),300);}},1000);},
+playStep(i){const f=S.jSlots[i];if(!f)return;Aud.ensure();Aud.resume();Aud.play(f);S.playing=true;const ct=catFor(f.id);document.getElementById('jprog-cur').textContent=f.hz+' Hz \u2014 '+f.name;document.getElementById('jprog-cur').style.color=ct?ct.hex:'';UI.syncAll();},
+stop(){S.jPlaying=false;if(S.jInterval)clearInterval(S.jInterval);S.jInterval=null;Aud.stopAll();S.playing=false;document.getElementById('jprog').classList.remove('active');document.getElementById('j-play').textContent='Play Journey';document.getElementById('jprog-bar').style.width='0%';UI.syncAll();},
+};
+
+const Share={
+encode(){const p=new URLSearchParams();if(S.activeSounds.size>0)p.set('f',[...S.activeSounds.values()].map(s=>s.freq.id).join(','));p.set('w',S.wave);p.set('m',S.mode);if(S.jSlots.some(Boolean))p.set('j',S.jSlots.map(s=>s?s.id:'_').join(','));return location.origin+location.pathname+'?'+p.toString();},
+decode(){const p=new URLSearchParams(location.search);if(p.has('w')){S.wave=p.get('w');document.querySelectorAll('.wpill').forEach(b=>b.classList.toggle('active',b.dataset.wave===S.wave));}if(p.has('m')&&p.get('m')==='layer'){S.mode='layer';document.getElementById('mode-sw').setAttribute('aria-checked','true');document.getElementById('m-single').classList.remove('on');document.getElementById('m-layer').classList.add('on');}if(p.has('f')){Aud.ensure();Aud.resume();p.get('f').split(',').forEach(id=>{const f=findFreq(id);if(f)Aud.play(f);});S.playing=S.activeSounds.size>0;}if(p.has('j')){S.jSlots=p.get('j').split(',').map(id=>id==='_'?null:findFreq(id));}},
+show(){document.getElementById('share-url').value=Share.encode();document.getElementById('share-overlay').classList.add('visible');},
+hide(){document.getElementById('share-overlay').classList.remove('visible');},
+copy(){const inp=document.getElementById('share-url');inp.select();navigator.clipboard.writeText(inp.value).then(()=>{document.getElementById('share-copy-btn').textContent='Copied!';setTimeout(()=>document.getElementById('share-copy-btn').textContent='Copy Link',2000);}).catch(()=>document.execCommand('copy'));},
+};
+
+function bind(){
+document.getElementById('cat-scroll').addEventListener('click',e=>{const b=e.target.closest('.cat-pill');if(b)UI.selectCat(b.dataset.cat);});
+document.getElementById('freq-grid').addEventListener('click',e=>{const card=e.target.closest('.fcard');if(!card)return;const f=(FREQ_DATA[S.catId]||[]).find(x=>x.id===card.dataset.fid);if(!f)return;if(S.view==='journey')UI.selFreqJ(f);else UI.selFreqPlay(f);});
+document.getElementById('freq-grid').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();const card=e.target.closest('.fcard');if(!card)return;const f=(FREQ_DATA[S.catId]||[]).find(x=>x.id===card.dataset.fid);if(!f)return;if(S.view==='journey')UI.selFreqJ(f);else UI.selFreqPlay(f);}});
+document.getElementById('ctrl-play').addEventListener('click',()=>{Aud.resume();if(S.activeSounds.size>0){Aud.stopAll();S.playing=false;UI.syncAll();}});
+document.getElementById('wave-pills').addEventListener('click',e=>{const b=e.target.closest('.wpill');if(!b)return;Aud.resume();S.wave=b.dataset.wave;document.querySelectorAll('.wpill').forEach(x=>x.classList.toggle('active',x===b));const freqs=[...S.activeSounds.values()].map(s=>s.freq);Aud.stopAll();setTimeout(()=>{freqs.forEach(f=>Aud.play(f));S.playing=S.activeSounds.size>0;UI.syncAll();},300);});
+document.getElementById('mode-sw').addEventListener('click',()=>{Aud.resume();S.mode=S.mode==='single'?'layer':'single';const isL=S.mode==='layer';document.getElementById('mode-sw').setAttribute('aria-checked',isL?'true':'false');document.getElementById('m-single').classList.toggle('on',!isL);document.getElementById('m-layer').classList.toggle('on',isL);if(!isL&&S.activeSounds.size>1){Aud.stopAll();S.playing=false;}UI.syncAll();});
+document.getElementById('master-vol').addEventListener('input',e=>{Aud.resume();Aud.setM(parseFloat(e.target.value));});
+document.getElementById('timer-sel').addEventListener('change',e=>Timer.start(parseInt(e.target.value,10)));
+document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>UI.switchView(t.dataset.view)));
+document.getElementById('viz-layers').addEventListener('click',e=>{const rm=e.target.closest('.crm');if(!rm)return;Aud.stop(rm.dataset.rid);S.playing=S.activeSounds.size>0;UI.syncAll();});
+document.getElementById('jslots-row').addEventListener('click',e=>{const rm=e.target.closest('.js-rm');if(rm){S.jSlots[parseInt(rm.dataset.idx)]=null;UI.renderJS();UI.syncCards();return;}const db=e.target.closest('.js-dur-btn');if(db){const idx=parseInt(db.dataset.idx);const dir=parseInt(db.dataset.dir);S.jDurs[idx]=Math.max(1,Math.min(60,S.jDurs[idx]+dir));UI.renderJS();return;}});
+// Drag/drop for journey slots
+let jDragIdx=null;
+document.getElementById('jslots-row').addEventListener('dragstart',e=>{const sl=e.target.closest('.jslot.filled');if(!sl)return;jDragIdx=parseInt(sl.dataset.idx);e.dataTransfer.effectAllowed='move';});
+document.getElementById('jslots-row').addEventListener('dragover',e=>{e.preventDefault();const sl=e.target.closest('.jslot');if(sl)sl.classList.add('highlight');});
+document.getElementById('jslots-row').addEventListener('dragleave',e=>{const sl=e.target.closest('.jslot');if(sl)sl.classList.remove('highlight');});
+document.getElementById('jslots-row').addEventListener('drop',e=>{e.preventDefault();const sl=e.target.closest('.jslot');if(!sl)return;sl.classList.remove('highlight');const toIdx=parseInt(sl.dataset.idx);if(jDragIdx!==null&&jDragIdx!==toIdx){const tmpF=S.jSlots[jDragIdx];const tmpD=S.jDurs[jDragIdx];S.jSlots[jDragIdx]=S.jSlots[toIdx];S.jDurs[jDragIdx]=S.jDurs[toIdx];S.jSlots[toIdx]=tmpF;S.jDurs[toIdx]=tmpD;UI.renderJS();UI.syncCards();}jDragIdx=null;});
+document.getElementById('jslots-row').addEventListener('dragend',()=>{jDragIdx=null;document.querySelectorAll('.jslot').forEach(s=>s.classList.remove('highlight'));});
+document.getElementById('j-play').addEventListener('click',()=>{if(S.jPlaying)Journey.stop();else Journey.start();});
+document.getElementById('j-clear').addEventListener('click',()=>{S.jSlots=[null,null,null,null,null,null];S.jDurs=[5,5,5,5,5,5];if(S.jPlaying)Journey.stop();UI.renderJS();UI.syncCards();});
+document.getElementById('share-btn').addEventListener('click',Share.show);
+document.getElementById('share-copy-btn').addEventListener('click',Share.copy);
+document.getElementById('share-close-btn').addEventListener('click',Share.hide);
+document.getElementById('share-overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)Share.hide();});
+document.addEventListener('touchstart',()=>Aud.resume(),{passive:true});
+}
+
+function init(){UI.renderCats();UI.renderCards();UI.syncAll();UI.renderJS();Share.decode();bind();Viz.start();}
+init();
+})();
+</script>
+</body>
+</html>
