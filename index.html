@@ -47,7 +47,6 @@
       --col-sleep-bg: rgba(167,139,186,0.18); --col-meditation-bg: rgba(139,159,212,0.18); --col-relaxation-bg: rgba(126,196,184,0.18); --col-focus-bg: rgba(228,192,122,0.18); --col-neural-bg: rgba(122,173,228,0.18); --col-pain-bg: rgba(141,212,160,0.18); --col-chakra-bg: rgba(212,160,139,0.18); --col-solfeggio-bg: rgba(212,139,160,0.18); --col-earth-bg: rgba(160,196,160,0.18); }
     body.light #header { background: rgba(245,242,237,0.92); }
     body.light #control-bar { background: rgba(240,237,232,0.96); }
-    body.light #ctrl-play { background: var(--text-primary); color: var(--bg-base); }
     body.light .vlchip { background: rgba(0,0,0,0.06); }
     body.light .fcard .fcard-name { color: rgba(0,0,0,0.75); }
     body.light .fcard .fcard-desc { color: rgba(0,0,0,0.45); }
@@ -57,9 +56,6 @@
     body.light .fcard.active { border-color: transparent; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
     body.light #top-section { background: #1a1a1e; border-color: rgba(255,255,255,0.06); }
     body.light #top-section::before { background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.02), transparent 70%); }
-    body.light #top-header { color: var(--text-muted); }
-    body.light #top-title { color: rgba(255,255,255,0.4); }
-    body.light #top-status { color: rgba(255,255,255,0.5); }
     body.light #viz-empty { color: rgba(255,255,255,0.3); }
     body.light .vlchip { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); }
     body.light .vlchip .crm { color: rgba(255,255,255,0.4); }
@@ -114,11 +110,8 @@
 
     #main { padding: 20px; padding-bottom: 200px; max-width: 900px; margin: 0 auto; }
 
-    #top-section { margin-bottom: 24px; background: var(--bg-card); border-radius: var(--radius-xl); border: 1px solid var(--border-subtle); padding: 20px; position: relative; overflow: hidden; }
+    #top-section { margin-bottom: 24px; background: var(--bg-card); border-radius: var(--radius-xl); border: 1px solid var(--border-subtle); padding: 16px; position: relative; overflow: hidden; }
     #top-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.02), transparent 70%); pointer-events: none; }
-    #top-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; position: relative; z-index: 1; }
-    #top-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
-    #top-status { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
 
     /* Fixed-height content area so switching views causes zero layout shift */
     #top-content { height: 160px; position: relative; }
@@ -153,20 +146,20 @@
     .jslot.filled:hover .js-rm { opacity: 1; }
     .jslot .js-rm:hover { background: rgba(0,0,0,0.6); color: #fff; }
 
-    #jprog { display: none; margin-top: 8px; }
-    #jprog.active { display: block; }
-    #jprog-bar-wrap { height: 4px; border-radius: 2px; background: rgba(255,255,255,0.08); overflow: hidden; margin-bottom: 6px; }
-    #jprog-bar { height: 100%; border-radius: 2px; background: var(--col-focus); width: 0%; transition: width 0.5s linear; }
-    #jprog-info { display: flex; align-items: center; justify-content: space-between; }
-    #jprog-cur { font-size: 12px; font-weight: 600; }
-    #jprog-time { font-size: 11px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
-    #jctrl-row { display: flex; gap: 8px; margin-top: 8px; }
-    .jctl { padding: 8px 18px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 600; transition: all 0.2s; }
-    .jctl-pri { background: var(--text-primary); color: var(--bg-base); }
+    #jctrl-row { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
+    .jctl { border-radius: var(--radius-pill); font-size: 12px; font-weight: 600; transition: all 0.2s; }
+    .jctl-pri { background: var(--text-primary); color: var(--bg-base); width: 36px; height: 36px; border-radius: 50%; padding: 0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .jctl-pri:hover { box-shadow: 0 4px 16px rgba(240,236,228,0.2); }
     .jctl-pri:disabled { background: var(--bg-hover); color: var(--text-muted); box-shadow: none; }
-    .jctl-sec { background: rgba(255,255,255,0.06); color: var(--text-secondary); }
+    .jctl-sec { padding: 8px 18px; background: rgba(255,255,255,0.06); color: var(--text-secondary); flex-shrink: 0; }
     .jctl-sec:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+    #jprog { display: none; flex: 1; min-width: 0; }
+    #jprog.active { display: block; }
+    #jprog-bar-wrap { height: 4px; border-radius: 2px; background: rgba(255,255,255,0.08); overflow: hidden; margin-bottom: 4px; }
+    #jprog-bar { height: 100%; border-radius: 2px; background: var(--col-focus); width: 0%; transition: width 0.5s linear; }
+    #jprog-info { display: flex; align-items: center; justify-content: space-between; }
+    #jprog-cur { font-size: 11px; font-weight: 600; }
+    #jprog-time { font-size: 10px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
 
     #cat-scroll { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 4px 0 16px; -webkit-overflow-scrolling: touch; }
     #cat-scroll::-webkit-scrollbar { display: none; }
@@ -199,12 +192,8 @@
     @keyframes pulse-glow { 0%,100%{transform:scale(1);box-shadow:0 0 6px rgba(255,255,255,.4)} 50%{transform:scale(1.4);box-shadow:0 0 12px rgba(255,255,255,.6)} }
 
     #control-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; background: rgba(18,18,20,0.96); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid var(--border-subtle); padding: 14px 24px; padding-bottom: max(14px, env(safe-area-inset-bottom)); }
-    #control-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 16px; }
-    #ctrl-play { width: 48px; height: 48px; border-radius: 50%; background: var(--text-primary); color: var(--bg-base); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; box-shadow: 0 4px 20px rgba(240,236,228,0.15); }
-    #ctrl-play:hover{transform:scale(1.06)}#ctrl-play:active{transform:scale(.95)}#ctrl-play:disabled{background:var(--bg-card);color:var(--text-muted);box-shadow:none}
-    #ctrl-info { flex: 1; min-width: 0; }
-    #ctrl-name { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    #ctrl-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+    #control-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+    #ctrl-spacer { flex: 1; }
     #ctrl-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
     #wave-pills { display: flex; background: var(--bg-card); border-radius: var(--radius-pill); border: 1px solid var(--border-subtle); overflow: hidden; }
     .wpill { padding: 6px 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); transition: all 0.2s; }
@@ -262,10 +251,6 @@
   <header id="header">
     <div id="brand">OlO</div>
     <div id="header-controls">
-      <nav id="nav-tabs">
-        <button class="nav-tab active" data-view="play">Play</button>
-        <button class="nav-tab" data-view="journey">Journey</button>
-      </nav>
       <div id="theme-switch">
         <button class="theme-opt active" data-theme="dark" title="Dark mode">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
@@ -274,9 +259,6 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
         </button>
       </div>
-      <button class="header-btn" id="photic-btn" title="Photic entrainment">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-      </button>
       <button class="header-btn" id="share-btn" title="Share">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
       </button>
@@ -284,10 +266,6 @@
   </header>
   <div id="main">
     <section id="top-section">
-      <div id="top-header">
-        <span id="top-title"></span>
-        <span id="top-status"></span>
-      </div>
       <div id="top-content">
         <div id="viz-wrap-outer">
           <div id="viz-wrap"><canvas id="viz-canvas"></canvas><div id="viz-empty">Select a frequency to begin</div></div>
@@ -295,11 +273,11 @@
         </div>
         <div id="jslots-wrap">
           <div id="jslots-row"></div>
+        <div id="jctrl-row">
+          <button class="jctl jctl-pri" id="j-play" disabled><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
           <div id="jprog"><div id="jprog-bar-wrap"><div id="jprog-bar"></div></div><div id="jprog-info"><span id="jprog-cur"></span><span id="jprog-time"></span></div></div>
-          <div id="jctrl-row">
-            <button class="jctl jctl-pri" id="j-play" disabled>Play Journey</button>
-            <button class="jctl jctl-sec" id="j-clear">Clear</button>
-          </div>
+          <button class="jctl jctl-sec" id="j-clear">Clear</button>
+        </div>
         </div>
       </div>
     </section>
@@ -311,8 +289,14 @@
   <div id="photic-overlay"><div id="photic-flash"></div><div id="photic-info"><div class="photic-hz" id="photic-hz-display"></div><div>Close your eyes. Tap anywhere to exit.</div></div><button id="photic-exit">Exit</button></div>
   <div id="photic-warn"><div id="photic-warn-box"><h3>Photosensitivity Warning</h3><p>Photic entrainment uses screen flicker synced to the selected frequency. This feature produces rapid flashing light.</p><p><strong>Do not use if you have epilepsy, a history of seizures, or photosensitivity.</strong> Consult a medical professional if unsure.</p><p>Close your eyes before the flicker begins. The therapeutic effect works through closed eyelids via phosphene stimulation.</p><div id="photic-warn-actions"><button class="pw-btn pw-accept" id="pw-accept">I understand, proceed</button><button class="pw-btn pw-cancel" id="pw-cancel">Cancel</button></div></div></div>
   <div id="control-bar"><div id="control-inner">
-    <button id="ctrl-play" aria-label="Play" disabled><svg id="ctrl-play-icon" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
-    <div id="ctrl-info"><div id="ctrl-name">Select a frequency</div><div id="ctrl-sub"></div></div>
+    <nav id="nav-tabs">
+      <button class="nav-tab active" data-view="play">Play</button>
+      <button class="nav-tab" data-view="journey">Journey</button>
+    </nav>
+    <button class="header-btn" id="photic-btn" title="Strobe">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    </button>
+    <div id="ctrl-spacer"></div>
     <div id="ctrl-right">
       <div id="wave-pills"><button class="wpill active" data-wave="sine">Sine</button><button class="wpill" data-wave="binaural">Binaural</button><button class="wpill" data-wave="isochronal">Iso</button></div>
       <div id="mode-pill"><span class="mode-lbl on" id="m-single">Single</span><button id="mode-sw" role="switch" aria-checked="false" aria-label="Layer mode"><div class="sw-track"></div><div class="sw-thumb"></div></button><span class="mode-lbl" id="m-layer">Layer</span></div>
@@ -398,24 +382,25 @@ const FREQ_DATA={
 ],
 };
 
-const S={catId:'deep-sleep',mode:'single',wave:'sine',activeSounds:new Map(),masterVol:0.5,playing:false,ctx:null,masterGain:null,analyser:null,vizRaf:null,timerDur:0,timerRem:0,timerInterval:null,timerFading:false,view:'play',jSlots:[null,null,null,null,null,null],jDurs:[5,5,5,5,5,5],jPlaying:false,jInterval:null,jStep:0,jStepTime:0};
+const S={catId:'deep-sleep',mode:'single',wave:'sine',activeSounds:new Map(),masterVol:0.5,playing:false,ctx:null,masterGain:null,compressor:null,analyser:null,vizRaf:null,timerDur:0,timerRem:0,timerInterval:null,timerFading:false,view:'play',jSlots:[null,null,null,null,null,null],jDurs:[5,5,5,5,5,5],jPlaying:false,jInterval:null,jStep:0,jStepTime:0};
 
 function findFreq(fid){for(const c of Object.keys(FREQ_DATA)){const f=FREQ_DATA[c].find(x=>x.id===fid);if(f)return f;}return null;}
 function catFor(fid){return CATEGORIES.find(c=>FREQ_DATA[c.id]?.some(f=>f.id===fid));}
 
 const Aud={
-ensure(){if(S.ctx)return;const C=window.AudioContext||window.webkitAudioContext;S.ctx=new C();S.masterGain=S.ctx.createGain();S.masterGain.gain.setValueAtTime(S.masterVol,S.ctx.currentTime);S.analyser=S.ctx.createAnalyser();S.analyser.fftSize=2048;S.analyser.smoothingTimeConstant=0.8;S.masterGain.connect(S.analyser);S.analyser.connect(S.ctx.destination);},
+ensure(){if(S.ctx)return;const C=window.AudioContext||window.webkitAudioContext;S.ctx=new C();S.masterGain=S.ctx.createGain();S.masterGain.gain.setValueAtTime(S.masterVol,S.ctx.currentTime);S.compressor=S.ctx.createDynamicsCompressor();S.compressor.threshold.setValueAtTime(-24,S.ctx.currentTime);S.compressor.knee.setValueAtTime(12,S.ctx.currentTime);S.compressor.ratio.setValueAtTime(8,S.ctx.currentTime);S.compressor.attack.setValueAtTime(0.005,S.ctx.currentTime);S.compressor.release.setValueAtTime(0.1,S.ctx.currentTime);S.analyser=S.ctx.createAnalyser();S.analyser.fftSize=2048;S.analyser.smoothingTimeConstant=0.8;S.masterGain.connect(S.compressor);S.compressor.connect(S.analyser);S.analyser.connect(S.ctx.destination);},
 resume(){if(S.ctx&&S.ctx.state==='suspended')S.ctx.resume();},
 _bin(f){if(f.hz<20)return true;return S.wave==='binaural';},
-_mkSine(f){const c=S.ctx,o=c.createOscillator();o.type='sine';o.frequency.setValueAtTime(f.hz,c.currentTime);const g=c.createGain();g.gain.setValueAtTime(0,c.currentTime);g.gain.linearRampToValueAtTime(1,c.currentTime+.2);o.connect(g);g.connect(S.masterGain);o.start();return{oscillators:[o],gainNode:g,isBinaural:false};},
-_mkBin(f){const c=S.ctx,cr=f.carrierHz||200,bt=f.hz,g=c.createGain();g.gain.setValueAtTime(0,c.currentTime);g.gain.linearRampToValueAtTime(1,c.currentTime+.2);const m=c.createChannelMerger(2);const oL=c.createOscillator();oL.type='sine';oL.frequency.setValueAtTime(cr,c.currentTime);const gL=c.createGain();gL.gain.setValueAtTime(1,c.currentTime);oL.connect(gL);gL.connect(m,0,0);const oR=c.createOscillator();oR.type='sine';oR.frequency.setValueAtTime(cr+bt,c.currentTime);const gR=c.createGain();gR.gain.setValueAtTime(1,c.currentTime);oR.connect(gR);gR.connect(m,0,1);m.connect(g);g.connect(S.masterGain);oL.start();oR.start();return{oscillators:[oL,oR],gainNode:g,isBinaural:true};},
+_mkSine(f){const c=S.ctx,o=c.createOscillator();o.type='sine';o.frequency.setValueAtTime(f.hz,c.currentTime);const g=c.createGain();g.gain.setValueAtTime(0,c.currentTime);g.gain.linearRampToValueAtTime(0.7,c.currentTime+.2);o.connect(g);g.connect(S.masterGain);o.start();return{oscillators:[o],gainNode:g,isBinaural:false};},
+_mkBin(f){const c=S.ctx,cr=f.carrierHz||200,bt=f.hz,g=c.createGain();g.gain.setValueAtTime(0,c.currentTime);g.gain.linearRampToValueAtTime(0.7,c.currentTime+.2);const m=c.createChannelMerger(2);const oL=c.createOscillator();oL.type='sine';oL.frequency.setValueAtTime(cr,c.currentTime);const gL=c.createGain();gL.gain.setValueAtTime(1,c.currentTime);oL.connect(gL);gL.connect(m,0,0);const oR=c.createOscillator();oR.type='sine';oR.frequency.setValueAtTime(cr+bt,c.currentTime);const gR=c.createGain();gR.gain.setValueAtTime(1,c.currentTime);oR.connect(gR);gR.connect(m,0,1);m.connect(g);g.connect(S.masterGain);oL.start();oR.start();return{oscillators:[oL,oR],gainNode:g,isBinaural:true};},
 _mkIso(f){const c=S.ctx;const carrier=f.hz<20?(f.carrierHz||200):f.hz;const rate=f.hz;const osc=c.createOscillator();osc.type='sine';osc.frequency.setValueAtTime(carrier,c.currentTime);const g=c.createGain();g.gain.setValueAtTime(0,c.currentTime);
 const pulseDur=1/rate;const ramp=Math.min(pulseDur*0.15,0.005);const startT=c.currentTime;const totalDur=120;
 for(let t=0;t<totalDur;t+=pulseDur){const on=startT+t;const off=on+pulseDur*0.5;g.gain.setValueAtTime(0,on);g.gain.linearRampToValueAtTime(1,on+ramp);g.gain.setValueAtTime(1,off-ramp);g.gain.linearRampToValueAtTime(0,off);}
 const env=c.createGain();env.gain.setValueAtTime(0,c.currentTime);env.gain.linearRampToValueAtTime(1,c.currentTime+0.2);osc.connect(g);g.connect(env);env.connect(S.masterGain);osc.start();return{oscillators:[osc],gainNode:env,isBinaural:false};},
-play(f){if(S.activeSounds.has(f.id))return;Aud.ensure();Aud.resume();if(S.masterGain&&S.masterGain.gain.value<S.masterVol*.5)Aud.resetM();let sn;if(S.wave==='isochronal')sn=Aud._mkIso(f);else if(Aud._bin(f))sn=Aud._mkBin(f);else sn=Aud._mkSine(f);sn.freq=f;const ct=catFor(f.id);sn.color=ct?ct.hex:'#888';S.activeSounds.set(f.id,sn);},
-stop(id){const s=S.activeSounds.get(id);if(!s)return;const now=S.ctx.currentTime;s.gainNode.gain.cancelScheduledValues(now);s.gainNode.gain.setValueAtTime(s.gainNode.gain.value,now);s.gainNode.gain.linearRampToValueAtTime(0,now+.2);S.activeSounds.delete(id);setTimeout(()=>{s.oscillators.forEach(o=>{try{o.stop();o.disconnect();}catch(e){}});try{s.gainNode.disconnect();}catch(e){}},250);},
+play(f){if(S.activeSounds.has(f.id))return;Aud.ensure();Aud.resume();if(S.masterGain&&S.masterGain.gain.value<S.masterVol*.5)Aud.resetM();let sn;if(S.wave==='isochronal')sn=Aud._mkIso(f);else if(Aud._bin(f))sn=Aud._mkBin(f);else sn=Aud._mkSine(f);sn.freq=f;const ct=catFor(f.id);sn.color=ct?ct.hex:'#888';S.activeSounds.set(f.id,sn);Aud._rebalance();},
+stop(id){const s=S.activeSounds.get(id);if(!s)return;const now=S.ctx.currentTime;s.gainNode.gain.cancelScheduledValues(now);s.gainNode.gain.setValueAtTime(s.gainNode.gain.value,now);s.gainNode.gain.linearRampToValueAtTime(0,now+.2);S.activeSounds.delete(id);Aud._rebalance();setTimeout(()=>{s.oscillators.forEach(o=>{try{o.stop();o.disconnect();}catch(e){}});try{s.gainNode.disconnect();}catch(e){}},250);},
 stopAll(){const sv=new Map(S.activeSounds);S.activeSounds.clear();if(!S.ctx)return;for(const[,s]of sv){const now=S.ctx.currentTime;s.gainNode.gain.cancelScheduledValues(now);s.gainNode.gain.setValueAtTime(s.gainNode.gain.value,now);s.gainNode.gain.linearRampToValueAtTime(0,now+.2);setTimeout(()=>{s.oscillators.forEach(o=>{try{o.stop();o.disconnect();}catch(e){}});try{s.gainNode.disconnect();}catch(e){}},250);}},
+_rebalance(){if(!S.ctx)return;const n=S.activeSounds.size;if(n===0)return;const vol=0.7/Math.sqrt(n);const now=S.ctx.currentTime;for(const[,s]of S.activeSounds){s.gainNode.gain.cancelScheduledValues(now);s.gainNode.gain.setValueAtTime(s.gainNode.gain.value,now);s.gainNode.gain.linearRampToValueAtTime(vol,now+0.1);}},
 setM(v){S.masterVol=v;if(!S.masterGain)return;const now=S.ctx.currentTime;S.masterGain.gain.cancelScheduledValues(now);S.masterGain.gain.setValueAtTime(Math.max(S.masterGain.gain.value,.001),now);S.masterGain.gain.linearRampToValueAtTime(v,now+.05);},
 fadeAll(sec){if(!S.masterGain||!S.ctx)return;const now=S.ctx.currentTime;S.masterGain.gain.cancelScheduledValues(now);S.masterGain.gain.setValueAtTime(S.masterGain.gain.value,now);S.masterGain.gain.exponentialRampToValueAtTime(.001,now+sec);},
 resetM(){if(!S.masterGain||!S.ctx)return;const now=S.ctx.currentTime;S.masterGain.gain.cancelScheduledValues(now);S.masterGain.gain.setValueAtTime(.001,now);S.masterGain.gain.linearRampToValueAtTime(S.masterVol,now+.1);},
@@ -446,7 +431,7 @@ renderCats(){document.getElementById('cat-scroll').innerHTML=CATEGORIES.map(c=>`
 renderCards(){const cat=CATEGORIES.find(c=>c.id===S.catId);document.getElementById('cat-title').textContent=cat.name;document.getElementById('cat-desc').textContent=cat.desc;
 const freqs=FREQ_DATA[S.catId]||[];
 document.getElementById('freq-grid').innerHTML=freqs.map(f=>{const isBin=f.binaural&&f.hz<20;
-return`<div class="fcard" data-fid="${f.id}" tabindex="0" role="listitem" style="background:${cat.bg};color:${cat.hex}"><div><div class="fcard-hz">${f.hz}<span class="fcard-unit">Hz</span></div><div class="fcard-name" style="color:${cat.hex}">${f.name}</div><div class="fcard-desc">${f.desc}</div>${isBin?'<span class="fcard-badge">Binaural</span>':''}</div><div class="fcard-source">${f.source}</div><div class="fcard-dot" style="background:${cat.hex}"></div></div>`;}).join('');
+return`<div class="fcard" data-fid="${f.id}" tabindex="0" role="listitem" style="background:${cat.bg};color:${cat.hex}"><div><div class="fcard-hz">${f.hz}<span class="fcard-unit">Hz</span></div><div class="fcard-name" style="color:${cat.hex}">${f.name}</div><div class="fcard-desc">${f.desc}</div>${isBin?'<span class="fcard-badge">Binaural</span>':''}</div><div class="fcard-dot" style="background:${cat.hex}"></div></div>`;}).join('');
 UI.syncCards();},
 
 syncCards(){const isJ=S.view==='journey';const curCat=CATEGORIES.find(c=>c.id===S.catId);document.querySelectorAll('.fcard').forEach(card=>{const fid=card.dataset.fid;const on=isJ?S.jSlots.some(s=>s&&s.id===fid):S.activeSounds.has(fid);card.classList.toggle('active',on);if(on){const ct=catFor(fid);const hex=ct?ct.hex:'#888';card.style.background=hex;card.style.color='#fff';card.style.borderColor='transparent';card.querySelector('.fcard-name').style.color='#fff';card.querySelector('.fcard-dot').style.background='#fff';}else{card.style.background=curCat?curCat.bg:'var(--bg-card)';card.style.color=curCat?curCat.hex:'var(--text-primary)';card.style.borderColor='transparent';const nm=card.querySelector('.fcard-name');if(nm)nm.style.color=curCat?curCat.hex:'';const dt=card.querySelector('.fcard-dot');if(dt)dt.style.background=curCat?curCat.hex:'';}});},
@@ -461,15 +446,9 @@ document.getElementById('j-play').disabled=!S.jSlots.some(Boolean);},
 
 switchView(v){S.view=v;document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active',t.dataset.view===v));
 const isJ=v==='journey';document.getElementById('viz-wrap-outer').classList.toggle('hidden',isJ);document.getElementById('jslots-wrap').classList.toggle('active',isJ);
-document.getElementById('top-title').textContent=isJ?'Journey':'';document.getElementById('top-status').textContent=isJ?'Tap a frequency below to fill slots':'';
 if(isJ)UI.renderJS();UI.syncCards();UI.syncAll();},
 
-syncAll(){const btn=document.getElementById('ctrl-play'),has=S.activeSounds.size>0;btn.disabled=!has;
-document.getElementById('ctrl-play-icon').innerHTML=has?'<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>':'<path d="M8 5v14l11-7z"/>';
-btn.setAttribute('aria-label',has?'Stop':'Play');
-const nm=document.getElementById('ctrl-name'),sb=document.getElementById('ctrl-sub');
-if(!has){nm.textContent='Select a frequency';sb.textContent='';}else{const ss=[...S.activeSounds.values()];if(ss.length===1){nm.textContent=ss[0].freq.hz+' Hz \u2014 '+ss[0].freq.name;const ct=catFor(ss[0].freq.id);sb.textContent=ct?ct.name:'';}else{nm.textContent=ss.length+' frequencies active';sb.textContent=ss.map(s=>s.freq.hz+' Hz').join(' \u00b7 ');}}
-if(S.view==='play'){const vs=document.getElementById('top-status');if(has){const w=S.wave==='binaural'?'Binaural':S.wave==='isochronal'?'Isochronal':'Sine';vs.textContent=w+' \u00b7 '+S.activeSounds.size+' layer'+(S.activeSounds.size>1?'s':'');}else vs.textContent='';document.getElementById('top-title').textContent='';}
+syncAll(){const has=S.activeSounds.size>0;
 UI.renderVL();if(has){Viz.start();Wake.acquire();}else{Viz.stop();Wake.release();}},
 
 timerD(){const el=document.getElementById('timer-disp');if(!S.timerDur||S.timerRem<=0){el.textContent='';return;}const m=Math.floor(S.timerRem/60),s=S.timerRem%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');},
@@ -483,13 +462,13 @@ selFreqJ(f){const ni=S.jSlots.findIndex(s=>s===null);if(ni===-1)return;S.jSlots[
 
 const Journey={
 start(){const filled=S.jSlots.filter(Boolean);if(!filled.length)return;Aud.stopAll();S.jPlaying=true;S.jStep=S.jSlots.findIndex(s=>s!==null);S.jStepTime=0;
-document.getElementById('jprog').classList.add('active');document.getElementById('j-play').textContent='Stop';
+document.getElementById('jprog').classList.add('active');document.getElementById('j-play').innerHTML='<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
 Journey.playStep(S.jStep);
 S.jInterval=setInterval(()=>{S.jStepTime++;const fi=S.jSlots.reduce((a,s,i)=>{if(s)a.push(i);return a;},[]);const totalTime=fi.reduce((a,i)=>a+S.jDurs[i]*60,0);const si=fi.indexOf(S.jStep);const elapsed=fi.slice(0,si).reduce((a,i)=>a+S.jDurs[i]*60,0)+S.jStepTime;
 document.getElementById('jprog-bar').style.width=(elapsed/totalTime*100)+'%';const rem=totalTime-elapsed;const m=Math.floor(rem/60),s=rem%60;document.getElementById('jprog-time').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+' left';
 const stepDurSec=S.jDurs[S.jStep]*60;if(S.jStepTime>=stepDurSec){S.jStepTime=0;let nx=-1;for(let i=S.jStep+1;i<S.jSlots.length;i++){if(S.jSlots[i]){nx=i;break;}}if(nx===-1){Journey.stop();return;}S.jStep=nx;Aud.stopAll();setTimeout(()=>Journey.playStep(nx),300);}},1000);},
 playStep(i){const f=S.jSlots[i];if(!f)return;Aud.ensure();Aud.resume();Aud.play(f);S.playing=true;const ct=catFor(f.id);document.getElementById('jprog-cur').textContent=f.hz+' Hz \u2014 '+f.name;document.getElementById('jprog-cur').style.color=ct?ct.hex:'';UI.syncAll();},
-stop(){S.jPlaying=false;if(S.jInterval)clearInterval(S.jInterval);S.jInterval=null;Aud.stopAll();S.playing=false;document.getElementById('jprog').classList.remove('active');document.getElementById('j-play').textContent='Play Journey';document.getElementById('jprog-bar').style.width='0%';UI.syncAll();},
+stop(){S.jPlaying=false;if(S.jInterval)clearInterval(S.jInterval);S.jInterval=null;Aud.stopAll();S.playing=false;document.getElementById('jprog').classList.remove('active');document.getElementById('j-play').innerHTML='<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';document.getElementById('jprog-bar').style.width='0%';UI.syncAll();},
 };
 
 const Share={
@@ -504,7 +483,6 @@ function bind(){
 document.getElementById('cat-scroll').addEventListener('click',e=>{const b=e.target.closest('.cat-pill');if(b)UI.selectCat(b.dataset.cat);});
 document.getElementById('freq-grid').addEventListener('click',e=>{const card=e.target.closest('.fcard');if(!card)return;const f=(FREQ_DATA[S.catId]||[]).find(x=>x.id===card.dataset.fid);if(!f)return;if(S.view==='journey')UI.selFreqJ(f);else UI.selFreqPlay(f);});
 document.getElementById('freq-grid').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();const card=e.target.closest('.fcard');if(!card)return;const f=(FREQ_DATA[S.catId]||[]).find(x=>x.id===card.dataset.fid);if(!f)return;if(S.view==='journey')UI.selFreqJ(f);else UI.selFreqPlay(f);}});
-document.getElementById('ctrl-play').addEventListener('click',()=>{Aud.resume();if(S.activeSounds.size>0){Aud.stopAll();S.playing=false;UI.syncAll();}});
 document.getElementById('wave-pills').addEventListener('click',e=>{const b=e.target.closest('.wpill');if(!b)return;Aud.resume();S.wave=b.dataset.wave;document.querySelectorAll('.wpill').forEach(x=>x.classList.toggle('active',x===b));const freqs=[...S.activeSounds.values()].map(s=>s.freq);Aud.stopAll();setTimeout(()=>{freqs.forEach(f=>Aud.play(f));S.playing=S.activeSounds.size>0;UI.syncAll();},300);});
 document.getElementById('mode-sw').addEventListener('click',()=>{Aud.resume();S.mode=S.mode==='single'?'layer':'single';const isL=S.mode==='layer';document.getElementById('mode-sw').setAttribute('aria-checked',isL?'true':'false');document.getElementById('m-single').classList.toggle('on',!isL);document.getElementById('m-layer').classList.toggle('on',isL);if(!isL&&S.activeSounds.size>1){Aud.stopAll();S.playing=false;}UI.syncAll();});
 document.getElementById('master-vol').addEventListener('input',e=>{Aud.resume();Aud.setM(parseFloat(e.target.value));});
