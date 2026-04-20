@@ -232,6 +232,40 @@
     .share-close { background: var(--bg-card); color: var(--text-secondary); border: 1px solid var(--border-mid); }
     .share-close:hover { background: var(--bg-hover); color: var(--text-primary); }
 
+    /* ═══ PRESET PANEL ═══ */
+    #preset-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(6px); z-index: 300; display: none; }
+    #preset-overlay.visible { display: block; }
+    #preset-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 340px; max-width: 90vw; background: var(--bg-surface); z-index: 310; transform: translateX(100%); transition: transform 0.3s ease; overflow-y: auto; border-left: 1px solid var(--border-subtle); }
+    #preset-panel.open { transform: translateX(0); }
+    #preset-panel-header { display: flex; align-items: center; justify-content: space-between; padding: 20px; border-bottom: 1px solid var(--border-subtle); position: sticky; top: 0; background: var(--bg-surface); z-index: 1; }
+    #preset-panel-header h3 { font-size: 18px; font-weight: 700; }
+    #preset-close { width: 32px; height: 32px; border-radius: 50%; background: var(--bg-card); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; font-size: 16px; transition: all 0.15s; }
+    #preset-close:hover { background: var(--bg-hover); color: var(--text-primary); }
+    #preset-save-bar { padding: 12px 20px; border-bottom: 1px solid var(--border-subtle); }
+    #preset-save-btn { width: 100%; padding: 10px; border-radius: var(--radius-md); background: var(--text-primary); color: var(--bg-base); font-size: 13px; font-weight: 600; transition: all 0.2s; }
+    #preset-save-btn:hover { opacity: 0.9; }
+    .preset-section-title { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); padding: 16px 20px 8px; }
+    .preset-cat-title { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-secondary); padding: 12px 20px 4px; }
+    .preset-item { display: flex; align-items: center; gap: 12px; padding: 10px 20px; cursor: pointer; transition: background 0.15s; }
+    .preset-item:hover { background: var(--bg-card); }
+    .preset-item .pi-color { width: 4px; height: 36px; border-radius: 2px; flex-shrink: 0; }
+    .preset-item .pi-info { flex: 1; min-width: 0; }
+    .preset-item .pi-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+    .preset-item .pi-desc { font-size: 10px; color: var(--text-muted); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .preset-item .pi-actions { display: flex; gap: 4px; flex-shrink: 0; }
+    .preset-item .pi-btn { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.06); color: var(--text-muted); display: flex; align-items: center; justify-content: center; font-size: 12px; transition: all 0.15s; }
+    .preset-item .pi-btn:hover { background: rgba(255,255,255,0.12); color: var(--text-primary); }
+    .preset-item .pi-del:hover { background: rgba(239,68,68,0.15); color: #ef4444; }
+    /* Save dialog */
+    #save-dialog { display: none; padding: 12px 20px; border-bottom: 1px solid var(--border-subtle); background: var(--bg-card); }
+    #save-dialog.visible { display: block; }
+    #save-name { width: 100%; padding: 8px 12px; border-radius: var(--radius-sm); background: var(--bg-base); border: 1px solid var(--border-mid); color: var(--text-primary); font-family: var(--font-body); font-size: 13px; outline: none; margin-bottom: 8px; }
+    #save-name:focus { border-color: var(--col-meditation); }
+    #save-actions { display: flex; gap: 8px; }
+    .save-act { flex: 1; padding: 8px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; transition: all 0.2s; }
+    .save-confirm { background: var(--text-primary); color: var(--bg-base); }
+    .save-cancel { background: var(--bg-hover); color: var(--text-secondary); }
+
     @media (max-width: 640px) {
       #header{padding:12px 16px}#brand{font-size:24px}#main{padding:16px;padding-bottom:180px}
       #cat-scroll{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}.cat-pill{flex:0 0 auto;padding:8px 14px}
@@ -259,6 +293,9 @@
       <button class="header-btn" id="share-btn" title="Share">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
       </button>
+      <button class="header-btn" id="preset-btn" title="Presets">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
     </div>
   </header>
   <div id="main">
@@ -285,6 +322,13 @@
   <div id="share-overlay"><div id="share-modal"><h3>Share Session</h3><p>Copy this link to share your current configuration.</p><input type="text" id="share-url" readonly><div id="share-actions"><button class="share-btn share-copy" id="share-copy-btn">Copy Link</button><button class="share-btn share-close" id="share-close-btn">Close</button></div></div></div>
   <div id="photic-overlay"><div id="photic-flash"></div><div id="photic-info"><div class="photic-hz" id="photic-hz-display"></div><div>Close your eyes. Tap anywhere to exit.</div></div><button id="photic-exit">Exit</button></div>
   <div id="photic-warn"><div id="photic-warn-box"><h3>Photosensitivity Warning</h3><p>Photic entrainment uses screen flicker synced to the selected frequency. This feature produces rapid flashing light.</p><p><strong>Do not use if you have epilepsy, a history of seizures, or photosensitivity.</strong> Consult a medical professional if unsure.</p><p>Close your eyes before the flicker begins. The therapeutic effect works through closed eyelids via phosphene stimulation.</p><div id="photic-warn-actions"><button class="pw-btn pw-accept" id="pw-accept">I understand, proceed</button><button class="pw-btn pw-cancel" id="pw-cancel">Cancel</button></div></div></div>
+  <div id="preset-overlay"></div>
+  <div id="preset-panel">
+    <div id="preset-panel-header"><h3>Presets</h3><button id="preset-close">&times;</button></div>
+    <div id="preset-save-bar"><button id="preset-save-btn">Save current as preset</button></div>
+    <div id="save-dialog"><input type="text" id="save-name" placeholder="Preset name..." maxlength="40"><div id="save-actions"><button class="save-act save-confirm" id="save-ok">Save</button><button class="save-act save-cancel" id="save-no">Cancel</button></div></div>
+    <div id="preset-list"></div>
+  </div>
   <div id="control-bar"><div id="control-inner">
     <nav id="nav-tabs">
       <button class="nav-tab active" data-view="play">Single</button>
@@ -482,6 +526,140 @@ hide(){document.getElementById('share-overlay').classList.remove('visible');},
 copy(){const inp=document.getElementById('share-url');inp.select();navigator.clipboard.writeText(inp.value).then(()=>{document.getElementById('share-copy-btn').textContent='Copied!';setTimeout(()=>document.getElementById('share-copy-btn').textContent='Copy Link',2000);}).catch(()=>document.execCommand('copy'));},
 };
 
+// ═══ PRESETS ═══
+const CURATED_PRESETS=[
+// Sleep
+{cat:'Sleep & Recovery',name:'Deep Sleep Induction',desc:'3 Hz delta, 90 min (Dabiri et al.)',mode:'single',wave:'binaural',freqs:['ds-3'],dur:90},
+{cat:'Sleep & Recovery',name:'Sleep Cycle Descent',desc:'Alpha → Theta → Delta sequence',mode:'journey',wave:'binaural',journey:[{id:'rel-10',dur:10},{id:'med-7',dur:10},{id:'ds-3',dur:60},{id:'med-7',dur:10}]},
+{cat:'Sleep & Recovery',name:'Ultra-Slow Delta',desc:'2 Hz deep restoration, 60 min',mode:'single',wave:'binaural',freqs:['ds-2'],dur:60},
+{cat:'Sleep & Recovery',name:'Recovery Sleep Stack',desc:'Delta + Schumann grounding',mode:'layer',wave:'binaural',freqs:['ds-3','med-783']},
+// Focus
+{cat:'Focus & Cognition',name:'Gamma Focus',desc:'40 Hz, 30 min (Santarnecchi et al.)',mode:'single',wave:'sine',freqs:['neu-40'],dur:30},
+{cat:'Focus & Cognition',name:'Thalamocortical Repair',desc:'40 Hz + 10 Hz (Llinás protocol)',mode:'layer',wave:'binaural',freqs:['neu-40','neu-10']},
+{cat:'Focus & Cognition',name:'Active Learning',desc:'18 Hz + 14 Hz dual beta',mode:'layer',wave:'binaural',freqs:['foc-18','foc-14']},
+{cat:'Focus & Cognition',name:'Focus Ramp',desc:'Alpha → Beta escalation',mode:'journey',wave:'binaural',journey:[{id:'rel-10',dur:5},{id:'foc-14',dur:10},{id:'foc-18',dur:15},{id:'foc-15',dur:10}]},
+{cat:'Focus & Cognition',name:'GABA Balance',desc:'20 Hz neural balance, 20 min',mode:'single',wave:'sine',freqs:['foc-20'],dur:20},
+// Meditation
+{cat:'Meditation',name:'Shamanic Theta',desc:'4.5 Hz, 30 min (Neher, 1961)',mode:'single',wave:'binaural',freqs:['med-45'],dur:30},
+{cat:'Meditation',name:'Meditation Descent',desc:'Alpha → Schumann → Deep Theta',mode:'journey',wave:'binaural',journey:[{id:'rel-12',dur:5},{id:'rel-10',dur:5},{id:'med-783',dur:10},{id:'med-6',dur:15},{id:'med-45',dur:20}]},
+{cat:'Meditation',name:'Schumann Grounding',desc:'7.83 Hz Earth resonance, 20 min',mode:'single',wave:'binaural',freqs:['med-783'],dur:20},
+{cat:'Meditation',name:'Creative Theta Stack',desc:'7 Hz + 10.5 Hz flow state',mode:'layer',wave:'binaural',freqs:['med-7','rel-105']},
+{cat:'Meditation',name:'Earth Resonance Stack',desc:'First 3 Schumann harmonics',mode:'layer',wave:'binaural',freqs:['ear-783','ear-141','ear-203']},
+// Relaxation
+{cat:'Relaxation',name:'Alpha Calm',desc:'10 Hz peak alpha, 20 min',mode:'single',wave:'binaural',freqs:['rel-10'],dur:20},
+{cat:'Relaxation',name:'Pre-Sleep Wind Down',desc:'Gradual alpha to theta descent',mode:'journey',wave:'binaural',journey:[{id:'rel-12',dur:5},{id:'rel-10',dur:10},{id:'rel-8',dur:10},{id:'med-6',dur:15}]},
+{cat:'Relaxation',name:'Anxiety Reduction',desc:'2 Hz delta, 40 min',mode:'single',wave:'binaural',freqs:['ds-2'],dur:40},
+{cat:'Relaxation',name:'Stress Recovery Stack',desc:'Alpha + Schumann grounding',mode:'layer',wave:'binaural',freqs:['rel-10','med-783']},
+// Pain
+{cat:'Pain & Healing',name:'Fibromyalgia Protocol',desc:'40 Hz gamma, 30 min (Naghdi et al.)',mode:'single',wave:'sine',freqs:['pai-40'],dur:30},
+{cat:'Pain & Healing',name:'Pain Relief Stack',desc:'40 Hz + 52 Hz clinical combo',mode:'layer',wave:'sine',freqs:['pai-40','pai-52']},
+{cat:'Pain & Healing',name:'Cardiovascular Support',desc:'50 Hz NO + 100 Hz blood flow',mode:'layer',wave:'sine',freqs:['pai-50','pai-100']},
+{cat:'Pain & Healing',name:'Bone & Tissue Repair',desc:'30 Hz + 26 Hz vibration therapy',mode:'layer',wave:'sine',freqs:['pai-30','pai-26']},
+{cat:'Pain & Healing',name:'Full Healing Stack',desc:'4-layer max therapeutic coverage',mode:'layer',wave:'sine',freqs:['pai-40','pai-50','pai-30','rel-10']},
+// Neural
+{cat:'Neural Health',name:'Alzheimer\'s GENUS',desc:'40 Hz + photic (MIT Picower)',mode:'single',wave:'sine',freqs:['neu-40'],dur:60,photic:true},
+{cat:'Neural Health',name:'Neural Coherence',desc:'40 Hz + 10 Hz thalamocortical',mode:'layer',wave:'binaural',freqs:['neu-40','neu-10']},
+{cat:'Neural Health',name:'Brain Recovery Journey',desc:'Alpha → Gamma → Alpha → Delta',mode:'journey',wave:'binaural',journey:[{id:'rel-10',dur:10},{id:'neu-40',dur:20},{id:'rel-10',dur:10},{id:'ds-3',dur:20}]},
+// Chakra
+{cat:'Chakra & Energy',name:'Root to Crown Ascent',desc:'7 chakras, 5 min each',mode:'journey',wave:'sine',journey:[{id:'cha-144',dur:5},{id:'cha-194',dur:5},{id:'cha-225',dur:5},{id:'cha-275',dur:5},{id:'cha-325',dur:5},{id:'cha-375',dur:5}]},
+{cat:'Chakra & Energy',name:'Grounding Triad',desc:'Root + Sacral + Solar Plexus',mode:'layer',wave:'sine',freqs:['cha-144','cha-194','cha-225']},
+// Solfeggio
+{cat:'Solfeggio',name:'Love Frequency',desc:'528 Hz MI, 20 min',mode:'single',wave:'sine',freqs:['sol-528'],dur:20},
+{cat:'Solfeggio',name:'Transformation Stack',desc:'Liberation + Love + Intuition',mode:'layer',wave:'sine',freqs:['sol-396','sol-528','sol-852']},
+// Earth
+{cat:'Earth & Cosmic',name:'Full Schumann',desc:'First 4 Schumann harmonics',mode:'layer',wave:'binaural',freqs:['ear-783','ear-141','ear-203','ear-264']},
+// Time of day
+{cat:'Daily Rhythms',name:'Morning Activation',desc:'Alpha → Beta → Gamma ramp',mode:'journey',wave:'binaural',journey:[{id:'rel-10',dur:5},{id:'foc-14',dur:10},{id:'foc-18',dur:10},{id:'neu-40',dur:5}]},
+{cat:'Daily Rhythms',name:'Afternoon Reset',desc:'Alpha + Schumann dip',mode:'journey',wave:'binaural',journey:[{id:'rel-10',dur:10},{id:'med-783',dur:10},{id:'rel-10',dur:10}]},
+{cat:'Daily Rhythms',name:'Evening Wind Down',desc:'50 min alpha to delta descent',mode:'journey',wave:'binaural',journey:[{id:'rel-10',dur:10},{id:'rel-8',dur:10},{id:'med-6',dur:15},{id:'ds-35',dur:15}]},
+];
+
+const CAT_COLORS={'Sleep & Recovery':'#a78bba','Focus & Cognition':'#e4c07a','Meditation':'#8b9fd4','Relaxation':'#7ec4b8','Pain & Healing':'#8dd4a0','Neural Health':'#7aade4','Chakra & Energy':'#d4a08b','Solfeggio':'#d48ba0','Earth & Cosmic':'#a0c4a0','Daily Rhythms':'#e4c07a'};
+
+const Presets={
+  getUserPresets(){try{return JSON.parse(localStorage.getItem('olo-presets')||'[]');}catch(e){return[];}},
+  saveUserPreset(name){
+    const p=Presets.getUserPresets();
+    const preset={name,ts:Date.now(),wave:S.wave,mode:S.mode};
+    if(S.view==='journey'){
+      preset.type='journey';
+      preset.journey=S.jSlots.map((s,i)=>s?{id:s.id,dur:S.jDurs[i]}:null).filter(Boolean);
+    } else {
+      preset.type=S.mode;
+      preset.freqs=[...S.activeSounds.values()].map(s=>s.freq.id);
+    }
+    p.push(preset);
+    localStorage.setItem('olo-presets',JSON.stringify(p));
+    Presets.render();
+  },
+  deleteUserPreset(idx){
+    const p=Presets.getUserPresets();
+    p.splice(idx,1);
+    localStorage.setItem('olo-presets',JSON.stringify(p));
+    Presets.render();
+  },
+  sharePreset(preset){
+    const p=new URLSearchParams();
+    p.set('w',preset.wave||'sine');
+    p.set('m',preset.mode||'single');
+    if(preset.journey){p.set('j',preset.journey.map(s=>s.id+'~'+s.dur).join(','));}
+    else if(preset.freqs){p.set('f',preset.freqs.join(','));}
+    const url=location.origin+location.pathname+'?'+p.toString();
+    navigator.clipboard.writeText(url).catch(()=>{});
+    return url;
+  },
+  apply(preset){
+    Aud.stopAll();S.playing=false;
+    S.wave=preset.wave||'sine';
+    document.querySelectorAll('.wpill').forEach(b=>b.classList.toggle('active',b.dataset.wave===S.wave));
+    if(preset.journey||preset.type==='journey'){
+      // Journey mode
+      UI.switchView('journey');
+      const j=preset.journey||[];
+      S.jSlots=[null,null,null,null,null,null];
+      S.jDurs=[5,5,5,5,5,5];
+      j.forEach((step,i)=>{if(i<6){S.jSlots[i]=findFreq(step.id);S.jDurs[i]=step.dur||5;}});
+      UI.renderJS();UI.syncCards();
+    } else {
+      UI.switchView('play');
+      S.mode=preset.mode||'single';
+      const isL=S.mode==='layer';
+      document.getElementById('mode-sw').setAttribute('aria-checked',isL?'true':'false');
+      document.getElementById('m-single').classList.toggle('on',!isL);
+      document.getElementById('m-layer').classList.toggle('on',isL);
+      Aud.ensure();Aud.resume();
+      (preset.freqs||[]).forEach(id=>{const f=findFreq(id);if(f)Aud.play(f);});
+      S.playing=S.activeSounds.size>0;
+      UI.syncCards();UI.syncWavePills();
+    }
+    UI.syncAll();
+    Presets.close();
+  },
+  open(){document.getElementById('preset-overlay').classList.add('visible');document.getElementById('preset-panel').classList.add('open');Presets.render();},
+  close(){document.getElementById('preset-overlay').classList.remove('visible');document.getElementById('preset-panel').classList.remove('open');},
+  render(){
+    const el=document.getElementById('preset-list');
+    let html='';
+    // User presets
+    const user=Presets.getUserPresets();
+    if(user.length){
+      html+='<div class="preset-section-title">My Presets</div>';
+      user.forEach((p,i)=>{
+        html+=`<div class="preset-item" data-user="${i}"><div class="pi-color" style="background:var(--col-meditation)"></div><div class="pi-info"><div class="pi-name">${p.name}</div><div class="pi-desc">${p.type==='journey'?'Journey':''}${p.freqs?p.freqs.length+' freq':''}${p.journey?p.journey.length+' steps':''}</div></div><div class="pi-actions"><button class="pi-btn pi-share" data-uidx="${i}" title="Share">&#8599;</button><button class="pi-btn pi-del" data-uidx="${i}" title="Delete">&times;</button></div></div>`;
+      });
+    }
+    // Curated presets grouped by category
+    html+='<div class="preset-section-title">Curated Protocols</div>';
+    let lastCat='';
+    CURATED_PRESETS.forEach((p,i)=>{
+      if(p.cat!==lastCat){lastCat=p.cat;html+=`<div class="preset-cat-title">${p.cat}</div>`;}
+      const col=CAT_COLORS[p.cat]||'#888';
+      html+=`<div class="preset-item" data-curated="${i}"><div class="pi-color" style="background:${col}"></div><div class="pi-info"><div class="pi-name">${p.name}</div><div class="pi-desc">${p.desc}</div></div></div>`;
+    });
+    el.innerHTML=html;
+  },
+};
+
 function bind(){
 document.getElementById('cat-scroll').addEventListener('click',e=>{const b=e.target.closest('.cat-pill');if(b)UI.selectCat(b.dataset.cat);});
 document.getElementById('freq-grid').addEventListener('click',e=>{const card=e.target.closest('.fcard');if(!card)return;const f=(FREQ_DATA[S.catId]||[]).find(x=>x.id===card.dataset.fid);if(!f)return;if(S.view==='journey')UI.selFreqJ(f);else UI.selFreqPlay(f);});
@@ -507,6 +685,24 @@ document.getElementById('share-copy-btn').addEventListener('click',Share.copy);
 document.getElementById('share-close-btn').addEventListener('click',Share.hide);
 document.getElementById('share-overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)Share.hide();});
 document.addEventListener('touchstart',()=>Aud.resume(),{passive:true});
+
+// Preset panel
+document.getElementById('preset-btn').addEventListener('click',Presets.open);
+document.getElementById('preset-close').addEventListener('click',Presets.close);
+document.getElementById('preset-overlay').addEventListener('click',Presets.close);
+document.getElementById('preset-save-btn').addEventListener('click',()=>{document.getElementById('save-dialog').classList.add('visible');document.getElementById('save-name').focus();});
+document.getElementById('save-ok').addEventListener('click',()=>{const name=document.getElementById('save-name').value.trim();if(!name)return;Presets.saveUserPreset(name);document.getElementById('save-name').value='';document.getElementById('save-dialog').classList.remove('visible');});
+document.getElementById('save-no').addEventListener('click',()=>{document.getElementById('save-dialog').classList.remove('visible');document.getElementById('save-name').value='';});
+document.getElementById('preset-list').addEventListener('click',e=>{
+  const del=e.target.closest('.pi-del');
+  if(del){Presets.deleteUserPreset(parseInt(del.dataset.uidx));return;}
+  const shr=e.target.closest('.pi-share');
+  if(shr){const p=Presets.getUserPresets()[parseInt(shr.dataset.uidx)];if(p){const url=Presets.sharePreset(p);shr.textContent='\u2713';setTimeout(()=>shr.innerHTML='&#8599;',1500);}return;}
+  const ci=e.target.closest('[data-curated]');
+  if(ci){Presets.apply(CURATED_PRESETS[parseInt(ci.dataset.curated)]);return;}
+  const ui=e.target.closest('[data-user]');
+  if(ui){Presets.apply(Presets.getUserPresets()[parseInt(ui.dataset.user)]);return;}
+});
 
 // Theme switch
 document.getElementById('theme-switch').addEventListener('click',e=>{
