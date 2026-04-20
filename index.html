@@ -180,12 +180,8 @@
     .fcard .fcard-unit { font-family: var(--font-body); font-size: 14px; font-weight: 400; opacity: 0.6; margin-left: 2px; }
     .fcard .fcard-name { font-size: 13px; font-weight: 600; margin-top: 8px; color: rgba(255,255,255,0.9); }
     .fcard .fcard-desc { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 4px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .fcard .fcard-dot { position: absolute; top: 14px; left: 20px; width: 8px; height: 8px; border-radius: 50%; opacity: 0; transition: opacity 0.2s; }
+    .fcard .fcard-dot { position: absolute; top: 14px; right: 14px; width: 8px; height: 8px; border-radius: 50%; opacity: 0; transition: opacity 0.2s; }
     .fcard.active .fcard-dot { opacity: 1; animation: pulse-glow 1.5s ease-in-out infinite; }
-    .fcard .fcard-badge { position: absolute; bottom: 14px; left: 20px; font-size: 9px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 8px; border-radius: var(--radius-pill); background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); }
-    .fcard .fcard-info { position: absolute; top: 14px; right: 14px; width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); font-size: 13px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; }
-    .fcard .fcard-info:hover { background: rgba(255,255,255,0.18); color: rgba(255,255,255,0.8); }
-    .fcard.active .fcard-info { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.6); }
     .fcard { animation: card-in 0.3s ease both; }
     .fcard:nth-child(1){animation-delay:0s}.fcard:nth-child(2){animation-delay:.04s}.fcard:nth-child(3){animation-delay:.08s}.fcard:nth-child(4){animation-delay:.12s}.fcard:nth-child(5){animation-delay:.16s}.fcard:nth-child(6){animation-delay:.2s}.fcard:nth-child(n+7){animation-delay:.24s}
     @keyframes card-in { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
@@ -432,7 +428,7 @@ renderCats(){document.getElementById('cat-scroll').innerHTML=CATEGORIES.map(c=>`
 renderCards(){const cat=CATEGORIES.find(c=>c.id===S.catId);document.getElementById('cat-title').textContent=cat.name;document.getElementById('cat-desc').textContent=cat.desc;
 const freqs=FREQ_DATA[S.catId]||[];
 document.getElementById('freq-grid').innerHTML=freqs.map(f=>{const isBin=f.binaural&&f.hz<20;
-return`<div class="fcard" data-fid="${f.id}" tabindex="0" role="listitem" style="background:${cat.bg};color:${cat.hex}"><div><div class="fcard-hz">${f.hz}<span class="fcard-unit">Hz</span></div><div class="fcard-name" style="color:${cat.hex}">${f.name}</div><div class="fcard-desc">${f.desc}</div></div>${isBin?'<span class="fcard-badge">Binaural</span>':''}<span class="fcard-info" data-fid="${f.id}" title="${f.source}">\u24D8</span><div class="fcard-dot" style="background:${cat.hex}"></div></div>`;}).join('');
+return`<div class="fcard" data-fid="${f.id}" tabindex="0" role="listitem" style="background:${cat.bg};color:${cat.hex}"><div><div class="fcard-hz">${f.hz}<span class="fcard-unit">Hz</span></div><div class="fcard-name" style="color:${cat.hex}">${f.name}</div><div class="fcard-desc">${f.desc}</div></div><div class="fcard-dot" style="background:${cat.hex}"></div></div>`;}).join('');
 UI.syncCards();},
 
 syncCards(){const isJ=S.view==='journey';const curCat=CATEGORIES.find(c=>c.id===S.catId);document.querySelectorAll('.fcard').forEach(card=>{const fid=card.dataset.fid;const on=isJ?S.jSlots.some(s=>s&&s.id===fid):S.activeSounds.has(fid);card.classList.toggle('active',on);if(on){const ct=catFor(fid);const hex=ct?ct.hex:'#888';card.style.background=hex;card.style.color='#fff';card.style.borderColor='transparent';card.querySelector('.fcard-name').style.color='#fff';card.querySelector('.fcard-dot').style.background='#fff';}else{card.style.background=curCat?curCat.bg:'var(--bg-card)';card.style.color=curCat?curCat.hex:'var(--text-primary)';card.style.borderColor='transparent';const nm=card.querySelector('.fcard-name');if(nm)nm.style.color=curCat?curCat.hex:'';const dt=card.querySelector('.fcard-dot');if(dt)dt.style.background=curCat?curCat.hex:'';}});},
