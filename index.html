@@ -287,7 +287,7 @@
   <div id="photic-warn"><div id="photic-warn-box"><h3>Photosensitivity Warning</h3><p>Photic entrainment uses screen flicker synced to the selected frequency. This feature produces rapid flashing light.</p><p><strong>Do not use if you have epilepsy, a history of seizures, or photosensitivity.</strong> Consult a medical professional if unsure.</p><p>Close your eyes before the flicker begins. The therapeutic effect works through closed eyelids via phosphene stimulation.</p><div id="photic-warn-actions"><button class="pw-btn pw-accept" id="pw-accept">I understand, proceed</button><button class="pw-btn pw-cancel" id="pw-cancel">Cancel</button></div></div></div>
   <div id="control-bar"><div id="control-inner">
     <nav id="nav-tabs">
-      <button class="nav-tab active" data-view="play">Play</button>
+      <button class="nav-tab active" data-view="play">Single</button>
       <button class="nav-tab" data-view="journey">Journey</button>
     </nav>
     <button class="header-btn" id="photic-btn" title="Strobe">
@@ -458,7 +458,7 @@ selectCat(id){S.catId=id;UI.renderCats();UI.renderCards();UI.syncAll();},
 selFreqPlay(f){Aud.ensure();Aud.resume();
 // Auto-switch to binaural for sub-20Hz
 if(f.hz<20&&S.wave==='sine'){S.wave='binaural';document.querySelectorAll('.wpill').forEach(b=>b.classList.toggle('active',b.dataset.wave==='binaural'));}
-if(S.mode==='single'){if(S.activeSounds.has(f.id)){Aud.stopAll();S.playing=false;}else{Aud.stopAll();Aud.play(f);S.playing=true;}}else{if(S.activeSounds.has(f.id))Aud.stop(f.id);else Aud.play(f);S.playing=S.activeSounds.size>0;}UI.syncCards();UI.syncWavePills();UI.syncAll();},
+if(S.mode==='single'){if(S.activeSounds.has(f.id)){Aud.stopAll();S.playing=false;}else{Aud.stopAll();Aud.play(f);S.playing=true;}}else{if(S.activeSounds.has(f.id))Aud.stop(f.id);else{if(S.activeSounds.size>=4)return;Aud.play(f);}S.playing=S.activeSounds.size>0;}UI.syncCards();UI.syncWavePills();UI.syncAll();},
 
 selFreqJ(f){const ni=S.jSlots.findIndex(s=>s===null);if(ni===-1)return;S.jSlots[ni]=f;UI.renderJS();UI.syncCards();},
 };
