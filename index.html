@@ -71,6 +71,9 @@
     body.light #share-modal { background: var(--bg-surface); }
     body.light .jctl-sec { background: rgba(0,0,0,0.05); }
     body.light .js-dur-btn { background: rgba(0,0,0,0.08); color: rgba(0,0,0,0.5); }
+    body.light #preset-panel { background: var(--bg-surface); }
+    body.light .preset-item:hover { background: var(--bg-card); }
+    body.light .pi-mode { background: rgba(0,0,0,0.06); }
 
     /* Photic entrainment overlay */
     #photic-overlay { position: fixed; inset: 0; z-index: 400; background: #000; display: none; align-items: center; justify-content: center; flex-direction: column; cursor: pointer; }
@@ -110,8 +113,9 @@
 
     #main { padding: 20px; padding-bottom: 200px; max-width: 900px; margin: 0 auto; }
 
-    #top-section { margin-bottom: 16px; background: var(--bg-card); border-radius: var(--radius-xl); border: 1px solid var(--border-subtle); padding: 16px; position: relative; overflow: hidden; }
+    #top-section { margin-bottom: 16px; background: var(--bg-card); border-radius: var(--radius-xl); border: 1px solid var(--border-subtle); padding: 12px 16px 16px; position: relative; overflow: hidden; }
     #top-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.02), transparent 70%); pointer-events: none; }
+    #top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; position: relative; z-index: 1; }
 
     /* Fixed-height content area so switching views causes zero layout shift */
     #top-content { height: 160px; position: relative; }
@@ -155,7 +159,7 @@
     .jctl-sec:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
     #jprog { display: none; flex: 1; min-width: 0; }
     #jprog.active { display: block; }
-    #jprog-bar-wrap { height: 4px; border-radius: 2px; background: rgba(255,255,255,0.08); overflow: hidden; margin-top: 16px; }
+    #jprog-bar-wrap { height: 8px; border-radius: 4px; background: rgba(255,255,255,0.08); overflow: hidden; margin-top: 14px; cursor: pointer; }
     #jprog-bar { height: 100%; border-radius: 2px; background: var(--col-focus); width: 0%; transition: width 0.5s linear; }
     #jprog-info { display: flex; align-items: center; justify-content: space-between; margin-top: 3px; }
     #jprog-cur { font-size: 11px; font-weight: 600; }
@@ -188,15 +192,11 @@
     @keyframes pulse-glow { 0%,100%{transform:scale(1);box-shadow:0 0 6px rgba(255,255,255,.4)} 50%{transform:scale(1.4);box-shadow:0 0 12px rgba(255,255,255,.6)} }
 
     #control-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; background: rgba(18,18,20,0.96); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid var(--border-subtle); padding: 14px 24px; padding-bottom: max(14px, env(safe-area-inset-bottom)); }
-    #control-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
-    #ctrl-spacer { flex: 1; }
-    #ctrl-right { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
+    #control-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 20px; }
+    #ctrl-right { display: flex; align-items: center; gap: 20px; }
     #wave-pills { display: flex; background: var(--bg-card); border-radius: var(--radius-pill); border: 1px solid var(--border-subtle); overflow: hidden; }
     .wpill { padding: 6px 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); transition: all 0.2s; }
-    .wpill.active { color: #fff; }
-    .wpill[data-wave="sine"].active { background: var(--col-relaxation); }
-    .wpill[data-wave="binaural"].active { background: var(--col-meditation); }
-    .wpill[data-wave="isochronal"].active { background: var(--col-focus); }
+    .wpill.active { color: #fff; background: var(--text-muted); }
     .wpill:hover:not(.active) { color: var(--text-secondary); }
     #mode-pill { display: flex; align-items: center; gap: 8px; }
     .mode-lbl { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); transition: color 0.2s; }
@@ -244,14 +244,15 @@
     #preset-save-bar { padding: 12px 20px; border-bottom: 1px solid var(--border-subtle); }
     #preset-save-btn { width: 100%; padding: 10px; border-radius: var(--radius-md); background: var(--text-primary); color: var(--bg-base); font-size: 13px; font-weight: 600; transition: all 0.2s; }
     #preset-save-btn:hover { opacity: 0.9; }
-    .preset-section-title { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); padding: 16px 20px 8px; }
-    .preset-cat-title { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-secondary); padding: 12px 20px 4px; }
-    .preset-item { display: flex; align-items: center; gap: 12px; padding: 10px 20px; cursor: pointer; transition: background 0.15s; }
+    .preset-section-title { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-secondary); padding: 16px 20px 8px; }
+    .preset-cat-title { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-primary); padding: 14px 20px 6px; opacity: 0.7; }
+    .preset-item { display: flex; align-items: center; gap: 12px; padding: 10px 20px; cursor: pointer; transition: background 0.15s; border-radius: 8px; margin: 2px 8px; }
     .preset-item:hover { background: var(--bg-card); }
     .preset-item .pi-color { width: 4px; height: 36px; border-radius: 2px; flex-shrink: 0; }
     .preset-item .pi-info { flex: 1; min-width: 0; }
     .preset-item .pi-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
-    .preset-item .pi-desc { font-size: 10px; color: var(--text-muted); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .preset-item .pi-desc { font-size: 11px; color: var(--text-secondary); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .preset-item .pi-mode { display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 1px 6px; border-radius: var(--radius-pill); background: rgba(255,255,255,0.06); color: var(--text-muted); margin-top: 3px; }
     .preset-item .pi-actions { display: flex; gap: 4px; flex-shrink: 0; }
     .preset-item .pi-btn { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.06); color: var(--text-muted); display: flex; align-items: center; justify-content: center; font-size: 12px; transition: all 0.15s; }
     .preset-item .pi-btn:hover { background: rgba(255,255,255,0.12); color: var(--text-primary); }
@@ -300,6 +301,15 @@
   </header>
   <div id="main">
     <section id="top-section">
+      <div id="top-bar">
+        <nav id="nav-tabs">
+          <button class="nav-tab active" data-view="play">Single</button>
+          <button class="nav-tab" data-view="journey">Journey</button>
+        </nav>
+        <button class="header-btn" id="photic-btn" title="Strobe">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </button>
+      </div>
       <div id="top-content">
         <div id="viz-wrap-outer">
           <div id="viz-wrap"><canvas id="viz-canvas"></canvas><div id="viz-empty">Select a frequency to begin</div></div>
@@ -330,14 +340,6 @@
     <div id="preset-list"></div>
   </div>
   <div id="control-bar"><div id="control-inner">
-    <nav id="nav-tabs">
-      <button class="nav-tab active" data-view="play">Single</button>
-      <button class="nav-tab" data-view="journey">Journey</button>
-    </nav>
-    <button class="header-btn" id="photic-btn" title="Strobe">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-    </button>
-    <div id="ctrl-spacer"></div>
     <div id="ctrl-right">
       <div id="wave-pills"><button class="wpill active" data-wave="sine">Sine</button><button class="wpill" data-wave="binaural">Binaural</button><button class="wpill" data-wave="isochronal">Iso</button></div>
       <div id="mode-pill"><span class="mode-lbl on" id="m-single">Single</span><button id="mode-sw" role="switch" aria-checked="false" aria-label="Layer mode"><div class="sw-track"></div><div class="sw-thumb"></div></button><span class="mode-lbl" id="m-layer">Layer</span></div>
@@ -369,7 +371,6 @@ const FREQ_DATA={
 {id:'med-45',hz:4.5,name:'Shamanic Trance',desc:'Theta frequency used in shamanic practice for 30,000+ years.',source:'Neher, 1961; Maxfield, 1990',binaural:true,carrierHz:200},
 {id:'med-6',hz:6,name:'Deep Theta',desc:'Deep theta state for vivid inner imagery and creative insight.',source:'Banquet, 1973',binaural:true,carrierHz:200},
 {id:'med-7',hz:7,name:'Creative Theta',desc:'Deep meditation and creative visualization.',source:'Niedermeyer & da Silva, 2004',binaural:true,carrierHz:200},
-{id:'med-783',hz:7.83,name:'Schumann Resonance',desc:"Earth's fundamental electromagnetic resonance frequency.",source:'Schumann, 1952; König, 1979',binaural:true,carrierHz:200},
 ],
 'relaxation':[
 {id:'rel-8',hz:8,name:'Alpha Entry',desc:'Light alpha for stress reduction and calm awareness.',source:'Berger, 1929; Klimesch, 1999',binaural:true,carrierHz:200},
@@ -385,12 +386,11 @@ const FREQ_DATA={
 ],
 'neural':[
 {id:'neu-40',hz:40,name:'Gamma Master',desc:'81% fibromyalgia improvement, 53\u201368% amyloid-beta reduction.',source:'Naghdi et al., 2019; Iaccarino et al., 2016',binaural:true,carrierHz:200},
-{id:'neu-10',hz:10,name:'Thalamic Alpha',desc:'Optimizes the thalamocortical feedback loop when paired with 40 Hz.',source:'Llinás & Ribary, 1993',binaural:true,carrierHz:200},
+{id:'ear-783',hz:7.83,name:'Schumann Resonance',desc:"Earth's fundamental resonance. Biological zeitgeber for circadian rhythms.",source:'Schumann, 1952; König, 1979',binaural:true,carrierHz:200},
 ],
 'pain':[
 {id:'pai-26',hz:26,name:'Whole Body Vibration',desc:'Enhanced blood flow and endothelial stimulation.',source:'Rittweger et al., 2000',binaural:true,carrierHz:200},
 {id:'pai-30',hz:30,name:'Bone Activation',desc:'Bone cell activation and osteogenic differentiation.',source:'Tanaka et al., 2003',binaural:true,carrierHz:200},
-{id:'pai-40',hz:40,name:'Fibromyalgia Relief',desc:'81% improvement in fibromyalgia clinical study.',source:'Naghdi et al., 2019',binaural:true,carrierHz:200},
 {id:'pai-50',hz:50,name:'Nitric Oxide +374%',desc:'374% increase in nitric oxide for cardiovascular support.',source:'Lundeberg et al., 2004',binaural:true,carrierHz:200},
 {id:'pai-52',hz:52,name:'Pain Relief',desc:'Low back and menstrual pain relief.',source:'Laufer et al., 2005',binaural:true,carrierHz:200},
 {id:'pai-86',hz:86,name:'CRPS Relief',desc:'~50% pain reduction in Complex Regional Pain Syndrome.',source:'Raso et al., 2005',binaural:true,carrierHz:200},
@@ -415,7 +415,6 @@ const FREQ_DATA={
 {id:'sol-963',hz:963,name:'Crown Activation',desc:'Connection to pure consciousness.',source:'Horowitz & Puleo, 1999'},
 ],
 'earth':[
-{id:'ear-783',hz:7.83,name:'Schumann 1st',desc:"Earth's fundamental resonance.",source:'Schumann, 1952',binaural:true,carrierHz:200},
 {id:'ear-141',hz:14.1,name:'Schumann 2nd',desc:'Alert yet grounded mental states.',source:'Schumann & König, 1954',binaural:true,carrierHz:200},
 {id:'ear-203',hz:20.3,name:'Schumann 3rd',desc:'Cognitive enhancement.',source:'Williams, 1992',binaural:true,carrierHz:200},
 {id:'ear-264',hz:26.4,name:'Schumann 4th',desc:'Physical and energetic stabilization.',source:'Williams, 1992',binaural:true,carrierHz:200},
@@ -477,7 +476,13 @@ UI.syncCards();},
 
 syncCards(){const isJ=S.view==='journey';const curCat=CATEGORIES.find(c=>c.id===S.catId);document.querySelectorAll('.fcard').forEach(card=>{const fid=card.dataset.fid;const on=isJ?S.jSlots.some(s=>s&&s.id===fid):S.activeSounds.has(fid);card.classList.toggle('active',on);if(on){const ct=catFor(fid);const hex=ct?ct.hex:'#888';card.style.background=hex;card.style.color='#fff';card.style.borderColor='transparent';card.querySelector('.fcard-name').style.color='#fff';card.querySelector('.fcard-dot').style.background='#fff';}else{card.style.background=curCat?curCat.bg:'var(--bg-card)';card.style.color=curCat?curCat.hex:'var(--text-primary)';card.style.borderColor='transparent';const nm=card.querySelector('.fcard-name');if(nm)nm.style.color=curCat?curCat.hex:'';const dt=card.querySelector('.fcard-dot');if(dt)dt.style.background=curCat?curCat.hex:'';}});},
 
-syncWavePills(){const hasSub20=[...S.activeSounds.values()].some(s=>s.freq.hz<20);const sineBtn=document.querySelector('.wpill[data-wave="sine"]');if(sineBtn){sineBtn.style.opacity=hasSub20?'0.3':'1';sineBtn.style.pointerEvents=hasSub20?'none':'auto';}},
+syncWavePills(){const hasSub20=[...S.activeSounds.values()].some(s=>s.freq.hz<20);const sineBtn=document.querySelector('.wpill[data-wave="sine"]');if(sineBtn){sineBtn.style.opacity=hasSub20?'0.3':'1';sineBtn.style.pointerEvents=hasSub20?'none':'auto';}UI.syncWavePillColor();},
+
+syncWavePillColor(){const activeWpill=document.querySelector('.wpill.active');if(!activeWpill)return;
+let hex=null;
+if(S.activeSounds.size>0){const first=[...S.activeSounds.values()][0];const ct=catFor(first.freq.id);if(ct)hex=ct.hex;}
+else if(S.view==='journey'){const curSlot=S.jSlots[S.jStep];if(curSlot){const ct=catFor(curSlot.id);if(ct)hex=ct.hex;}}
+document.querySelectorAll('.wpill').forEach(b=>{if(b.classList.contains('active')&&hex){b.style.background=hex;b.style.color='#fff';}else{b.style.background='';b.style.color='';}});},
 
 renderVL(){const el=document.getElementById('viz-layers');if(S.activeSounds.size===0){el.innerHTML='';return;}el.innerHTML=[...S.activeSounds.values()].map(s=>`<div class="vlchip"><span class="cdot" style="background:${s.color}"></span><span>${s.freq.hz} Hz</span><span class="crm" data-rid="${s.freq.id}">&times;</span></div>`).join('');},
 
@@ -493,7 +498,7 @@ if(isJ&&S.mode==='layer'){S.mode='single';document.getElementById('mode-sw').set
 if(isJ)UI.renderJS();UI.syncCards();UI.syncAll();},
 
 syncAll(){const has=S.activeSounds.size>0;
-UI.renderVL();UI.syncWavePills();if(has){Viz.start();Wake.acquire();}else{Viz.stop();Wake.release();}},
+UI.renderVL();UI.syncWavePills();UI.syncWavePillColor();if(has){Viz.start();Wake.acquire();}else{Viz.stop();Wake.release();}},
 
 timerD(){const el=document.getElementById('timer-disp');if(!S.timerDur||S.timerRem<=0){el.textContent='';return;}const m=Math.floor(S.timerRem/60),s=S.timerRem%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');},
 
@@ -514,8 +519,18 @@ Journey.playStep(S.jStep);
 S.jInterval=setInterval(()=>{S.jStepTime++;const fi=S.jSlots.reduce((a,s,i)=>{if(s)a.push(i);return a;},[]);const totalTime=fi.reduce((a,i)=>a+S.jDurs[i]*60,0);const si=fi.indexOf(S.jStep);const elapsed=fi.slice(0,si).reduce((a,i)=>a+S.jDurs[i]*60,0)+S.jStepTime;
 document.getElementById('jprog-bar').style.width=(elapsed/totalTime*100)+'%';const rem=totalTime-elapsed;const m=Math.floor(rem/60),s=rem%60;document.getElementById('jprog-time').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+' left';
 const stepDurSec=S.jDurs[S.jStep]*60;if(S.jStepTime>=stepDurSec){S.jStepTime=0;let nx=-1;for(let i=S.jStep+1;i<S.jSlots.length;i++){if(S.jSlots[i]){nx=i;break;}}if(nx===-1){Journey.stop();return;}S.jStep=nx;Aud.stopAll();setTimeout(()=>Journey.playStep(nx),300);}},1000);},
-playStep(i){const f=S.jSlots[i];if(!f)return;Aud.ensure();Aud.resume();Aud.play(f);S.playing=true;const ct=catFor(f.id);document.getElementById('jprog-cur').textContent=f.hz+' Hz \u2014 '+f.name;document.getElementById('jprog-cur').style.color=ct?ct.hex:'';UI.syncAll();},
-stop(){S.jPlaying=false;if(S.jInterval)clearInterval(S.jInterval);S.jInterval=null;Aud.stopAll();S.playing=false;document.getElementById('jprog').classList.remove('active');document.getElementById('j-play').innerHTML='<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';document.getElementById('jprog-bar').style.width='0%';UI.syncAll();},
+playStep(i){const f=S.jSlots[i];if(!f)return;Aud.ensure();Aud.resume();Aud.play(f);S.playing=true;const ct=catFor(f.id);document.getElementById('jprog-cur').textContent=f.hz+' Hz \u2014 '+f.name;document.getElementById('jprog-cur').style.color=ct?ct.hex:'';
+document.getElementById('jprog-bar').style.background=ct?ct.hex:'var(--col-focus)';
+// Highlight active slot
+document.querySelectorAll('.jslot').forEach(sl=>{
+  const idx=parseInt(sl.dataset.idx);const slot=S.jSlots[idx];
+  if(idx===i&&slot){const cat=catFor(slot.id);const hex=cat?cat.hex:'#888';sl.style.background=hex;sl.style.color='#fff';sl.style.borderColor='transparent';const nm=sl.querySelector('.js-name');if(nm)nm.style.color='#fff';const hz=sl.querySelector('.js-hz');if(hz)hz.style.color='#fff';}
+  else if(slot){const cat=catFor(slot.id);sl.style.background=cat?cat.bg:'var(--bg-card)';sl.style.color=cat?cat.hex:'';sl.style.borderColor='transparent';const nm=sl.querySelector('.js-name');if(nm)nm.style.color='rgba(255,255,255,0.8)';const hz=sl.querySelector('.js-hz');if(hz)hz.style.color=cat?cat.hex:'';}
+});
+UI.syncWavePillColor();UI.syncAll();},
+seekTo(pct){if(!S.jPlaying)return;const fi=S.jSlots.reduce((a,s,i)=>{if(s)a.push(i);return a;},[]);const totalTime=fi.reduce((a,i)=>a+S.jDurs[i]*60,0);let target=Math.floor(pct*totalTime);let acc=0;
+for(const idx of fi){const dur=S.jDurs[idx]*60;if(acc+dur>target){S.jStep=idx;S.jStepTime=target-acc;Aud.stopAll();Journey.playStep(idx);return;}acc+=dur;}},
+stop(){S.jPlaying=false;if(S.jInterval)clearInterval(S.jInterval);S.jInterval=null;Aud.stopAll();S.playing=false;document.getElementById('jprog').classList.remove('active');document.getElementById('j-play').innerHTML='<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';document.getElementById('jprog-bar').style.width='0%';UI.renderJS();UI.syncAll();},
 };
 
 const Share={
@@ -529,52 +544,42 @@ copy(){const inp=document.getElementById('share-url');inp.select();navigator.cli
 // ═══ PRESETS ═══
 const CURATED_PRESETS=[
 // Sleep
-{cat:'Sleep & Recovery',name:'Deep Sleep Induction',desc:'3 Hz delta, 90 min (Dabiri et al.)',mode:'single',wave:'binaural',freqs:['ds-3'],dur:90},
-{cat:'Sleep & Recovery',name:'Sleep Cycle Descent',desc:'Alpha → Theta → Delta sequence',mode:'journey',wave:'binaural',journey:[{id:'rel-10',dur:10},{id:'med-7',dur:10},{id:'ds-3',dur:60},{id:'med-7',dur:10}]},
-{cat:'Sleep & Recovery',name:'Ultra-Slow Delta',desc:'2 Hz deep restoration, 60 min',mode:'single',wave:'binaural',freqs:['ds-2'],dur:60},
-{cat:'Sleep & Recovery',name:'Recovery Sleep Stack',desc:'Delta + Schumann grounding',mode:'layer',wave:'binaural',freqs:['ds-3','med-783']},
+{cat:'Sleep',name:'Full Night Sleep Cycle',desc:'90 min hypnogram: alpha → theta → delta → theta',mode:'journey',wave:'binaural',journey:[{id:'rel-10',dur:10},{id:'med-7',dur:10},{id:'ds-3',dur:60},{id:'med-7',dur:10}]},
+{cat:'Sleep',name:'Insomnia Recovery',desc:'Delta + Schumann grounding layer',mode:'layer',wave:'binaural',freqs:['ds-3','ear-783']},
 // Focus
-{cat:'Focus & Cognition',name:'Gamma Focus',desc:'40 Hz, 30 min (Santarnecchi et al.)',mode:'single',wave:'sine',freqs:['neu-40'],dur:30},
-{cat:'Focus & Cognition',name:'Thalamocortical Repair',desc:'40 Hz + 10 Hz (Llinás protocol)',mode:'layer',wave:'binaural',freqs:['neu-40','neu-10']},
-{cat:'Focus & Cognition',name:'Active Learning',desc:'18 Hz + 14 Hz dual beta',mode:'layer',wave:'binaural',freqs:['foc-18','foc-14']},
-{cat:'Focus & Cognition',name:'Focus Ramp',desc:'Alpha → Beta escalation',mode:'journey',wave:'binaural',journey:[{id:'rel-10',dur:5},{id:'foc-14',dur:10},{id:'foc-18',dur:15},{id:'foc-15',dur:10}]},
-{cat:'Focus & Cognition',name:'GABA Balance',desc:'20 Hz neural balance, 20 min',mode:'single',wave:'sine',freqs:['foc-20'],dur:20},
+{cat:'Focus',name:'Thalamocortical Repair',desc:'Llinás protocol: 40 Hz gamma + 10 Hz alpha',mode:'layer',wave:'binaural',freqs:['neu-40','rel-10']},
+{cat:'Focus',name:'Deep Work Session',desc:'Dual beta for sustained concentration',mode:'layer',wave:'binaural',freqs:['foc-18','foc-14']},
+{cat:'Focus',name:'Cognitive Warm-Up',desc:'40 min ramp: alpha → low beta → beta',mode:'journey',wave:'binaural',journey:[{id:'rel-10',dur:5},{id:'foc-14',dur:10},{id:'foc-18',dur:15},{id:'foc-15',dur:10}]},
 // Meditation
-{cat:'Meditation',name:'Shamanic Theta',desc:'4.5 Hz, 30 min (Neher, 1961)',mode:'single',wave:'binaural',freqs:['med-45'],dur:30},
-{cat:'Meditation',name:'Meditation Descent',desc:'Alpha → Schumann → Deep Theta',mode:'journey',wave:'binaural',journey:[{id:'rel-12',dur:5},{id:'rel-10',dur:5},{id:'med-783',dur:10},{id:'med-6',dur:15},{id:'med-45',dur:20}]},
-{cat:'Meditation',name:'Schumann Grounding',desc:'7.83 Hz Earth resonance, 20 min',mode:'single',wave:'binaural',freqs:['med-783'],dur:20},
-{cat:'Meditation',name:'Creative Theta Stack',desc:'7 Hz + 10.5 Hz flow state',mode:'layer',wave:'binaural',freqs:['med-7','rel-105']},
-{cat:'Meditation',name:'Earth Resonance Stack',desc:'First 3 Schumann harmonics',mode:'layer',wave:'binaural',freqs:['ear-783','ear-141','ear-203']},
+{cat:'Meditation',name:'Deep Meditation Descent',desc:'55 min: alpha → Schumann → theta',mode:'journey',wave:'binaural',journey:[{id:'rel-12',dur:5},{id:'rel-10',dur:5},{id:'ear-783',dur:10},{id:'med-6',dur:15},{id:'med-45',dur:20}]},
+{cat:'Meditation',name:'Creative Flow State',desc:'Theta + healing alpha layer',mode:'layer',wave:'binaural',freqs:['med-7','rel-105']},
+{cat:'Meditation',name:'Planetary Resonance',desc:'First 3 Schumann harmonics layered',mode:'layer',wave:'binaural',freqs:['ear-783','ear-141','ear-203']},
 // Relaxation
-{cat:'Relaxation',name:'Alpha Calm',desc:'10 Hz peak alpha, 20 min',mode:'single',wave:'binaural',freqs:['rel-10'],dur:20},
-{cat:'Relaxation',name:'Pre-Sleep Wind Down',desc:'Gradual alpha to theta descent',mode:'journey',wave:'binaural',journey:[{id:'rel-12',dur:5},{id:'rel-10',dur:10},{id:'rel-8',dur:10},{id:'med-6',dur:15}]},
-{cat:'Relaxation',name:'Anxiety Reduction',desc:'2 Hz delta, 40 min',mode:'single',wave:'binaural',freqs:['ds-2'],dur:40},
-{cat:'Relaxation',name:'Stress Recovery Stack',desc:'Alpha + Schumann grounding',mode:'layer',wave:'binaural',freqs:['rel-10','med-783']},
+{cat:'Relaxation',name:'Pre-Sleep Wind Down',desc:'40 min: gradual alpha → theta descent',mode:'journey',wave:'binaural',journey:[{id:'rel-12',dur:5},{id:'rel-10',dur:10},{id:'rel-8',dur:10},{id:'med-6',dur:15}]},
+{cat:'Relaxation',name:'Stress Recovery',desc:'Alpha + Schumann grounding layer',mode:'layer',wave:'binaural',freqs:['rel-10','ear-783']},
 // Pain
-{cat:'Pain & Healing',name:'Fibromyalgia Protocol',desc:'40 Hz gamma, 30 min (Naghdi et al.)',mode:'single',wave:'sine',freqs:['pai-40'],dur:30},
-{cat:'Pain & Healing',name:'Pain Relief Stack',desc:'40 Hz + 52 Hz clinical combo',mode:'layer',wave:'sine',freqs:['pai-40','pai-52']},
-{cat:'Pain & Healing',name:'Cardiovascular Support',desc:'50 Hz NO + 100 Hz blood flow',mode:'layer',wave:'sine',freqs:['pai-50','pai-100']},
-{cat:'Pain & Healing',name:'Bone & Tissue Repair',desc:'30 Hz + 26 Hz vibration therapy',mode:'layer',wave:'sine',freqs:['pai-30','pai-26']},
-{cat:'Pain & Healing',name:'Full Healing Stack',desc:'4-layer max therapeutic coverage',mode:'layer',wave:'sine',freqs:['pai-40','pai-50','pai-30','rel-10']},
+{cat:'Pain & Healing',name:'Chronic Pain Management',desc:'40 Hz gamma + 52 Hz pain relief',mode:'layer',wave:'sine',freqs:['neu-40','pai-52']},
+{cat:'Pain & Healing',name:'Heart & Circulation',desc:'Nitric oxide + blood flow enhancement',mode:'layer',wave:'sine',freqs:['pai-50','pai-100']},
+{cat:'Pain & Healing',name:'Post-Injury Recovery',desc:'Bone activation + vibration therapy',mode:'layer',wave:'sine',freqs:['pai-30','pai-26']},
+{cat:'Pain & Healing',name:'Full Body Restoration',desc:'4-layer: gamma + NO + bone + alpha',mode:'layer',wave:'sine',freqs:['neu-40','pai-50','pai-30','rel-10']},
 // Neural
-{cat:'Neural Health',name:'Alzheimer\'s GENUS',desc:'40 Hz + photic (MIT Picower)',mode:'single',wave:'sine',freqs:['neu-40'],dur:60,photic:true},
-{cat:'Neural Health',name:'Neural Coherence',desc:'40 Hz + 10 Hz thalamocortical',mode:'layer',wave:'binaural',freqs:['neu-40','neu-10']},
-{cat:'Neural Health',name:'Brain Recovery Journey',desc:'Alpha → Gamma → Alpha → Delta',mode:'journey',wave:'binaural',journey:[{id:'rel-10',dur:10},{id:'neu-40',dur:20},{id:'rel-10',dur:10},{id:'ds-3',dur:20}]},
+{cat:'Neural Health',name:'Alzheimer\'s GENUS Protocol',desc:'40 Hz + photic strobe (MIT Picower)',mode:'single',wave:'sine',freqs:['neu-40'],dur:60,photic:true},
+{cat:'Neural Health',name:'Brain Coherence Therapy',desc:'40 Hz gamma + 10 Hz alpha layer',mode:'layer',wave:'binaural',freqs:['neu-40','rel-10']},
+{cat:'Neural Health',name:'Neuroplasticity Session',desc:'60 min: alpha → gamma → alpha → delta',mode:'journey',wave:'binaural',journey:[{id:'rel-10',dur:10},{id:'neu-40',dur:20},{id:'rel-10',dur:10},{id:'ds-3',dur:20}]},
 // Chakra
-{cat:'Chakra & Energy',name:'Root to Crown Ascent',desc:'7 chakras, 5 min each',mode:'journey',wave:'sine',journey:[{id:'cha-144',dur:5},{id:'cha-194',dur:5},{id:'cha-225',dur:5},{id:'cha-275',dur:5},{id:'cha-325',dur:5},{id:'cha-375',dur:5}]},
-{cat:'Chakra & Energy',name:'Grounding Triad',desc:'Root + Sacral + Solar Plexus',mode:'layer',wave:'sine',freqs:['cha-144','cha-194','cha-225']},
+{cat:'Chakra',name:'Full Chakra Alignment',desc:'30 min: root to crown sequential activation',mode:'journey',wave:'sine',journey:[{id:'cha-144',dur:5},{id:'cha-194',dur:5},{id:'cha-225',dur:5},{id:'cha-275',dur:5},{id:'cha-325',dur:5},{id:'cha-375',dur:5}]},
+{cat:'Chakra',name:'Physical Grounding',desc:'Root + sacral + solar plexus layer',mode:'layer',wave:'sine',freqs:['cha-144','cha-194','cha-225']},
 // Solfeggio
-{cat:'Solfeggio',name:'Love Frequency',desc:'528 Hz MI, 20 min',mode:'single',wave:'sine',freqs:['sol-528'],dur:20},
-{cat:'Solfeggio',name:'Transformation Stack',desc:'Liberation + Love + Intuition',mode:'layer',wave:'sine',freqs:['sol-396','sol-528','sol-852']},
+{cat:'Solfeggio',name:'Inner Transformation',desc:'Liberation + love + intuition layer',mode:'layer',wave:'sine',freqs:['sol-396','sol-528','sol-852']},
 // Earth
-{cat:'Earth & Cosmic',name:'Full Schumann',desc:'First 4 Schumann harmonics',mode:'layer',wave:'binaural',freqs:['ear-783','ear-141','ear-203','ear-264']},
-// Time of day
-{cat:'Daily Rhythms',name:'Morning Activation',desc:'Alpha → Beta → Gamma ramp',mode:'journey',wave:'binaural',journey:[{id:'rel-10',dur:5},{id:'foc-14',dur:10},{id:'foc-18',dur:10},{id:'neu-40',dur:5}]},
-{cat:'Daily Rhythms',name:'Afternoon Reset',desc:'Alpha + Schumann dip',mode:'journey',wave:'binaural',journey:[{id:'rel-10',dur:10},{id:'med-783',dur:10},{id:'rel-10',dur:10}]},
-{cat:'Daily Rhythms',name:'Evening Wind Down',desc:'50 min alpha to delta descent',mode:'journey',wave:'binaural',journey:[{id:'rel-10',dur:10},{id:'rel-8',dur:10},{id:'med-6',dur:15},{id:'ds-35',dur:15}]},
+{cat:'Earth',name:'Full Schumann Field',desc:'First 4 Earth resonance harmonics',mode:'layer',wave:'binaural',freqs:['ear-783','ear-141','ear-203','ear-264']},
+// Daily
+{cat:'Daily',name:'Morning Activation',desc:'30 min: alpha → beta → gamma ramp',mode:'journey',wave:'binaural',journey:[{id:'rel-10',dur:5},{id:'foc-14',dur:10},{id:'foc-18',dur:10},{id:'neu-40',dur:5}]},
+{cat:'Daily',name:'Afternoon Reset',desc:'30 min: alpha → Schumann → alpha dip',mode:'journey',wave:'binaural',journey:[{id:'rel-10',dur:10},{id:'ear-783',dur:10},{id:'rel-10',dur:10}]},
+{cat:'Daily',name:'Evening Transition',desc:'50 min: alpha → theta → delta descent',mode:'journey',wave:'binaural',journey:[{id:'rel-10',dur:10},{id:'rel-8',dur:10},{id:'med-6',dur:15},{id:'ds-35',dur:15}]},
 ];
 
-const CAT_COLORS={'Sleep & Recovery':'#a78bba','Focus & Cognition':'#e4c07a','Meditation':'#8b9fd4','Relaxation':'#7ec4b8','Pain & Healing':'#8dd4a0','Neural Health':'#7aade4','Chakra & Energy':'#d4a08b','Solfeggio':'#d48ba0','Earth & Cosmic':'#a0c4a0','Daily Rhythms':'#e4c07a'};
+const CAT_COLORS={'Sleep':'#a78bba','Focus':'#e4c07a','Meditation':'#8b9fd4','Relaxation':'#7ec4b8','Pain & Healing':'#8dd4a0','Neural Health':'#7aade4','Chakra':'#d4a08b','Solfeggio':'#d48ba0','Earth':'#a0c4a0','Daily':'#e4c07a'};
 
 const Presets={
   getUserPresets(){try{return JSON.parse(localStorage.getItem('olo-presets')||'[]');}catch(e){return[];}},
@@ -640,21 +645,21 @@ const Presets={
   render(){
     const el=document.getElementById('preset-list');
     let html='';
-    // User presets
     const user=Presets.getUserPresets();
     if(user.length){
       html+='<div class="preset-section-title">My Presets</div>';
       user.forEach((p,i)=>{
-        html+=`<div class="preset-item" data-user="${i}"><div class="pi-color" style="background:var(--col-meditation)"></div><div class="pi-info"><div class="pi-name">${p.name}</div><div class="pi-desc">${p.type==='journey'?'Journey':''}${p.freqs?p.freqs.length+' freq':''}${p.journey?p.journey.length+' steps':''}</div></div><div class="pi-actions"><button class="pi-btn pi-share" data-uidx="${i}" title="Share">&#8599;</button><button class="pi-btn pi-del" data-uidx="${i}" title="Delete">&times;</button></div></div>`;
+        const modeLabel=p.type==='journey'?'Journey':p.mode==='layer'?'Layer':'Single';
+        html+=`<div class="preset-item" data-user="${i}"><div class="pi-color" style="background:var(--col-meditation)"></div><div class="pi-info"><div class="pi-name">${p.name}</div><div class="pi-desc">${p.freqs?p.freqs.length+' frequencies':''}${p.journey?p.journey.length+' steps':''}</div><div class="pi-mode">${modeLabel}</div></div><div class="pi-actions"><button class="pi-btn pi-share" data-uidx="${i}" title="Share">&#8599;</button><button class="pi-btn pi-del" data-uidx="${i}" title="Delete">&times;</button></div></div>`;
       });
     }
-    // Curated presets grouped by category
     html+='<div class="preset-section-title">Curated Protocols</div>';
     let lastCat='';
     CURATED_PRESETS.forEach((p,i)=>{
       if(p.cat!==lastCat){lastCat=p.cat;html+=`<div class="preset-cat-title">${p.cat}</div>`;}
       const col=CAT_COLORS[p.cat]||'#888';
-      html+=`<div class="preset-item" data-curated="${i}"><div class="pi-color" style="background:${col}"></div><div class="pi-info"><div class="pi-name">${p.name}</div><div class="pi-desc">${p.desc}</div></div></div>`;
+      const modeLabel=p.journey?'Journey':p.mode==='layer'?'Layer':'Single';
+      html+=`<div class="preset-item" data-curated="${i}"><div class="pi-color" style="background:${col}"></div><div class="pi-info"><div class="pi-name">${p.name}</div><div class="pi-desc">${p.desc}</div><div class="pi-mode">${modeLabel}</div></div></div>`;
     });
     el.innerHTML=html;
   },
@@ -680,6 +685,7 @@ document.getElementById('jslots-row').addEventListener('drop',e=>{e.preventDefau
 document.getElementById('jslots-row').addEventListener('dragend',()=>{jDragIdx=null;document.querySelectorAll('.jslot').forEach(s=>s.classList.remove('highlight'));});
 document.getElementById('j-play').addEventListener('click',()=>{if(S.jPlaying)Journey.stop();else Journey.start();});
 document.getElementById('j-clear').addEventListener('click',()=>{S.jSlots=[null,null,null,null,null,null];S.jDurs=[5,5,5,5,5,5];if(S.jPlaying)Journey.stop();UI.renderJS();UI.syncCards();});
+document.getElementById('jprog-bar-wrap').addEventListener('click',e=>{if(!S.jPlaying)return;const rect=e.currentTarget.getBoundingClientRect();const pct=(e.clientX-rect.left)/rect.width;Journey.seekTo(Math.max(0,Math.min(1,pct)));});
 document.getElementById('share-btn').addEventListener('click',Share.show);
 document.getElementById('share-copy-btn').addEventListener('click',Share.copy);
 document.getElementById('share-close-btn').addEventListener('click',Share.hide);
